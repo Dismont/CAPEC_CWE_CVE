@@ -5,6 +5,8 @@
 - CWE
 - CVE
 
+---
+
 ### 1. CAPEC
 
 #### Необходимо получить информацию с сайта https://capec.mitre.org/data/definitions/1000.html 
