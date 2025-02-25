@@ -76,14 +76,14 @@ async def http_request_of_url(*, links:list[str]) -> list[dict[str,str]] | None:
 
 
 
-async def parsing_html_data(*,sites:list[str],links:list[str],base_name:str) -> list[str] | None:
-        """
-
-        :param sites:
-        :param links:
-        :param base_name:
-        :return:
-        """
+async def parsing_html_data(*,sites:list[str],base_name:str) -> list[str] | None:
+    """
+    Асинхронный метод для конечного парсинга сайта конкретного CAPEC
+    Получение: CapecID, CapecName, CapecDescription, CapecUrl, CapecToCweLinks, CapecToCweId
+    :param sites: list[ dict{ 'html' : html(str), 'url' : url(str) }, ... ]
+    :param base_name: 'CAPEC'
+    :return: ??? -> maybe file .sql  (insert into db ... )
+    """
 
         for i in range(len(sites)):
 
