@@ -23,8 +23,8 @@ def get_base_urls(*,url:str,base_url:str) -> list[str] | None:
                     iterations += 1
                     links.append(base_url + part_tag_a.get("href"))
             # for i in range(len(links)):
-                # print(f"URL №{i+1} -> {links[i]}")
-            print(f" Total records: {iterations}")
+            # print(f"URL №{i+1} -> {links[i]}")
+            print(f"Total records (Links): {iterations}")
             return links
         else:
             return None
@@ -33,6 +33,49 @@ def get_base_urls(*,url:str,base_url:str) -> list[str] | None:
         print(f"Что-то пошло не так!\n Error: {e}")
         exit()
 
+
+
+def get_type_of_capec (*,url:str) -> list[str] | None:
+    try:
+        response = requests.get(url)
+        http = BeautifulSoup(response.content, "html.parser")
+        all_tag_img = http.find_all('img')
+
+        types = []
+        iterations = 0
+
+        if len(all_tag_img) != 0:
+            for part_tag_img in all_tag_img:
+
+                # Category - C
+                if "category.gif" in str(part_tag_img.get("src")):
+                    types.append("Category")
+                    iterations += 1
+
+                # Meta Attack Pattern - M
+                if "meta_ap.gif" in str(part_tag_img.get("src")):
+                    types.append("Meta Attack Pattern")
+                    iterations += 1
+
+                # Detail Attack Pattern - D
+                if "detailed_ap.gif" in str(part_tag_img.get("src")):
+                    types.append("Detail Attack Pattern")
+                    iterations += 1
+
+                # Standard Attack Pattern - S
+                if "standard_ap.gif" in str(part_tag_img.get("src")):
+                    types.append("Standard Attack Pattern")
+                    iterations += 1
+
+            print(f"Total records (Type): {iterations}")
+            # print(f"List type Capce:", *types, sep="\n")
+            return types
+        else:
+            return None
+
+    except Exception as e:
+        print(f"Что-то пошло не так!\n Error: {e}")
+        exit()
 
 
 async def fetch_link(*,link: str, session: aiohttp.ClientSession) -> dict[str,str] | None:
@@ -166,10 +209,13 @@ async def main():
     CAPEC_FULL_URL = "https://capec.mitre.org/data/definitions/1000.html"
 
     # main code
+    type = get_type_of_capec(url=CAPEC_FULL_URL)
     links = get_base_urls(url=CAPEC_FULL_URL, base_url=CAPEC_BASE_URL)
-    if links:
-        html_data = await http_request_of_url(links=links)
-        await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL)
+    for i in range(len(type)):
+        print(f"Capec - {links[i]} - {type[i]}")
+    # if links:
+    #     html_data = await http_request_of_url(links=links)
+    #     await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL)
 
 
 
