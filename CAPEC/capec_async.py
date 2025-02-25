@@ -29,9 +29,9 @@ def get_base_urls(*,url:str,base_url:str) -> list[str] | None:
         else:
             return None
 
-    except requests.exceptions.ReadTimeout() as reRT:
-        print("Сервис не отвечает!")
-        exit(404)
+    except Exception as e:
+        print(f"Что-то пошло не так!\n Error: {e}")
+        exit()
 
 
 
