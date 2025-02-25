@@ -17,19 +17,23 @@ def get_base_urls(*,url:str,base_url:str) -> list[str] | None:
     links = []
     iterations = 0
 
-    if len(all_tag_a) != 0:
-        for part_tag_a in all_tag_a:
-            if "data/definitions/" in str(part_tag_a.get("href")):
-                iterations += 1
-                links.append(base_url + part_tag_a.get("href"))
-        # for i in range(len(links)):
-            # print(f"URL №{i+1} -> {links[i]}")
-        print(f" Total records: {iterations}")
+        if len(all_tag_a) != 0:
+            for part_tag_a in all_tag_a:
+                if "data/definitions/" in str(part_tag_a.get("href")):
+                    iterations += 1
+                    links.append(base_url + part_tag_a.get("href"))
+            # for i in range(len(links)):
+                # print(f"URL №{i+1} -> {links[i]}")
+            print(f" Total records: {iterations}")
+            return links
+        else:
+            return None
 
-        return links
+    except requests.exceptions.ReadTimeout() as reRT:
+        print("Сервис не отвечает!")
+        exit(404)
 
-    else:
-        return None
+
 
 async def fetch_link(*,link: str, session: aiohttp.ClientSession) -> dict[str,str] | None:
     """
