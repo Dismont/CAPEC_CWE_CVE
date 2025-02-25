@@ -1,4 +1,4 @@
-import asyncio, aiohttp, requests
+import asyncio, aiohttp, requests, aiofiles
 from bs4 import BeautifulSoup
 from typing import Any
 
@@ -9,13 +9,13 @@ def get_base_urls(*,url:str,base_url:str) -> list[str] | None:
     :param base_url: str -> https://capec.mitre.org/
     :return: list[str] -> [https://capec.mitre.org/111, https://capec.mitre.org/222]
     """
+    try:
+        response = requests.get(url)
+        http = BeautifulSoup(response.content, "html.parser")
+        all_tag_a = http.find_all('a')
 
-    response = requests.get(url)
-    http = BeautifulSoup(response.content, "html.parser")
-    all_tag_a = http.find_all('a')
-
-    links = []
-    iterations = 0
+        links = []
+        iterations = 0
 
         if len(all_tag_a) != 0:
             for part_tag_a in all_tag_a:
@@ -89,48 +89,44 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[st
     :return: ??? -> maybe file .sql  (insert into db ... )
     """
     # create file for writting sql query
-    async with aiofiles.open("capec_insert_query.txt", "a") as file:
+    async with aiofiles.open("capec_insert_query.sql", "a") as file:
         await file.write("insert into capec (id, capec_id, capec_name, capec_description, capec_url, capec_type) values \n")
 
 
     for i in range(len(sites)):
-            html_data = BeautifulSoup(sites[i]['html'], "html.parser")
-            # part 1 - Name (<h2> ... </h2>)
-            h2_name = html_data.find("h2")
-            name = h2_name.get_text().strip()
+        html_data = BeautifulSoup(sites[i]['html'], "html.parser")
+        # part 1 - Name (<h2> ... </h2>)
+        h2_name = html_data.find("h2")
+        name = h2_name.get_text().strip()
 
-            # part 2 - Description ( <div class='indent'> ... </div> )
-            div_description = html_data.find("div", class_ = "indent")
-            description = div_description.get_text().strip()
+        # part 2 - Description ( <div class='indent'> ... </div> )
+        div_description = html_data.find("div", class_ = "indent")
+        description = div_description.get_text().strip()
 
-            # part 3 - Relationship
-            # <div id='Related_Weaknesses'>
-            #   <table>
-            #       <tr>
-            #   this -->|   <td> <a href='XXXX'> 522 </a> </td>
-            #   this -->|   <td> text-to-text </td>
-            #       </tr>
-            #   </table>
-            # </div>
+        # part 3 - Relationship
+        # <div id='Related_Weaknesses'>
+        #   <table>
+        #       <tr>
+        #   this -->|   <td> <a href='XXXX'> 522 </a> </td>
+        #   this -->|   <td> text-to-text </td>
+        #       </tr>
+        #   </table>
+        # </div>
 
-            cwe_link = []
-            cwe = {}
-            div_related_weaknesses = html_data.find("div", id="Related_Weaknesses")
-            if div_related_weaknesses:
-                table_related_weaknesses = div_related_weaknesses.find("table")
-                if table_related_weaknesses:
-                    td_related_weaknesses = table_related_weaknesses.find_all("td")
-                    for i in range(0,len(td_related_weaknesses),2):
-                        cwe.update({td_related_weaknesses[i].get_text():td_related_weaknesses[i+1].get_text()})
-                        if td_related_weaknesses[i]:
-                            a_related_weaknesses = td_related_weaknesses[i].find_all("a")
-                            cwe_link.append(a_related_weaknesses[0].get("href"))
+        cwe_link = []
+        cwe = {}
+        div_related_weaknesses = html_data.find("div", id="Related_Weaknesses")
+        if div_related_weaknesses:
+            table_related_weaknesses = div_related_weaknesses.find("table")
+            if table_related_weaknesses:
+                td_related_weaknesses = table_related_weaknesses.find_all("td")
+                for i in range(0,len(td_related_weaknesses),2):
+                    cwe.update({td_related_weaknesses[i].get_text():td_related_weaknesses[i+1].get_text()})
+                    if td_related_weaknesses[i]:
+                        a_related_weaknesses = td_related_weaknesses[i].find_all("a")
+                        cwe_link.append(a_related_weaknesses[0].get("href"))
 
                     # print(*cwe_link,sep="\n")
-
-
-
-
             # ---> stdout dict
         print(f"CAPEC ID:    {name.strip().split(":")[0].split("-")[-1]}")
         print(f"CAPEC NAME:  {name.strip()}")
@@ -141,11 +137,19 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[st
         print("###################################################################")
 
             #write it as sql query
-        async with aiofiles.open("capec_insert_query.txt", "a") as file:
+        async with aiofiles.open("capec_insert_query.sql", "a") as file:
             if i + 1 != len(sites):
-                await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
+                #                       CapecID,                                    CapecName,       CapecDescription,                                      CapecUrl,                                          CapecType -
+                if name.strip().split(":")[0].split("-")[-1].isdigit():
+                    await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip().replace("\'", "`")}', '{description.replace("\'", "`")}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
+                else:
+                    print("Пропущенно!")
+                    print(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
             else:
-                await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '' ; \n")
+                if name.strip().split(":")[0].split("-")[-1].isdigit():
+                    await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '' ; \n")
+                    print("Пропущенно!")
+                    print(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000", f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
 
 
 
