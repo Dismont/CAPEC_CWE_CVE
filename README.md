@@ -28,9 +28,9 @@
 CAPEC подразделяется на несколько групп:
 
  
-| Название | Сокращение |
-|----------|------------|
-| Catehory | C |
-| Meta Attack Pattern | M|
-| Detail Attack Pattern | D|
-| Standart Attack Pattern| S |
+| Название                | Сокращение |
+|-------------------------|------------|
+| Category                | C |
+| Meta Attack Pattern     | M|
+| Detail Attack Pattern   | D|
+| Standard Attack Pattern | S |
