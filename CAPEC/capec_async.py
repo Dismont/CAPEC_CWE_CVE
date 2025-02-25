@@ -141,13 +141,13 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[st
             if i + 1 != len(sites):
                 #                       CapecID,                                    CapecName,       CapecDescription,                                      CapecUrl,                                          CapecType -
                 if name.strip().split(":")[0].split("-")[-1].isdigit():
-                    await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip().replace("\'", "`")}', '{description.replace("\'", "`")}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
+                    await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip().replace("\'", "`")}', '{description.replace("\'", "`")}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', ''), \n")
                 else:
                     print("Пропущенно!")
                     print(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
             else:
                 if name.strip().split(":")[0].split("-")[-1].isdigit():
-                    await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '' ; \n")
+                    await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '') ; \n")
                     print("Пропущенно!")
                     print(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000", f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
 
