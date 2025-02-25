@@ -88,6 +88,10 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[st
     :param full_url: 'https://capec.mitre.org/data/ ...'
     :return: ??? -> maybe file .sql  (insert into db ... )
     """
+    # create file for writting sql query
+    async with aiofiles.open("capec_insert_query.txt", "a") as file:
+        await file.write("insert into capec (id, capec_id, capec_name, capec_description, capec_url, capec_type) values \n")
+
 
     for i in range(len(sites)):
             html_data = BeautifulSoup(sites[i]['html'], "html.parser")
