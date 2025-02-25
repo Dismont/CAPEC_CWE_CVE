@@ -22,3 +22,15 @@
 - ***CWE_Id***
 - ***CWE_Name***
 - ***CWE_Link***
+
+---
+Что-то новое:
+CAPEC подразделяется на несколько групп:
+
+ 
+| Название | Сокращение |
+|----------|------------|
+| Catehory | C |
+| Meta Attack Pattern | M|
+| Detail Attack Pattern | D|
+| Standart Attack Pattern| S |
