@@ -76,19 +76,17 @@ async def http_request_of_url(*, links:list[str]) -> list[dict[str,str]] | None:
 
 
 
-async def parsing_html_data(*,sites:list[str],base_name:str) -> list[str] | None:
+async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[str] | None:
     """
     Асинхронный метод для конечного парсинга сайта конкретного CAPEC
     Получение: CapecID, CapecName, CapecDescription, CapecUrl, CapecToCweLinks, CapecToCweId
     :param sites: list[ dict{ 'html' : html(str), 'url' : url(str) }, ... ]
-    :param base_name: 'CAPEC'
+    :param full_url: 'https://capec.mitre.org/data/ ...'
     :return: ??? -> maybe file .sql  (insert into db ... )
     """
 
-        for i in range(len(sites)):
-
-            html_data = BeautifulSoup(sites[i], "html.parser")
-
+    for i in range(len(sites)):
+            html_data = BeautifulSoup(sites[i]['html'], "html.parser")
             # part 1 - Name (<h2> ... </h2>)
             h2_name = html_data.find("h2")
             name = h2_name.get_text().strip()
@@ -129,7 +127,7 @@ async def parsing_html_data(*,sites:list[str],base_name:str) -> list[str] | None
             print(f"CAPEC ID:    {name.strip().split(":")[0].split("-")[-1]}")
             print(f"CAPEC NAME:  {name.strip()}")
             print(f"DESCRIPTION: {description}")
-            print(f"URL:         {link}")
+            print(f"URL:         {full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}")
             print(f"CWE links:   "), print(*cwe_link,sep="\n")
             print(f"CWE ID - NAME: "), print(*cwe.items(),sep="\n")
             print("###################################################################")
@@ -147,7 +145,7 @@ async def main():
     links = get_base_urls(url=CAPEC_FULL_URL, base_url=CAPEC_BASE_URL)
     if links:
         html_data = await http_request_of_url(links=links)
-        # await parsing_html_data(sites=html_data,link=links,base_name=CAPEC_NAME)
+        await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL)
 
 
 
