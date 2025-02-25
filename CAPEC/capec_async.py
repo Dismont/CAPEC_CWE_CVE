@@ -132,13 +132,25 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[st
 
 
             # ---> stdout dict
-            print(f"CAPEC ID:    {name.strip().split(":")[0].split("-")[-1]}")
-            print(f"CAPEC NAME:  {name.strip()}")
-            print(f"DESCRIPTION: {description}")
-            print(f"URL:         {full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}")
-            print(f"CWE links:   "), print(*cwe_link,sep="\n")
-            print(f"CWE ID - NAME: "), print(*cwe.items(),sep="\n")
-            print("###################################################################")
+        print(f"CAPEC ID:    {name.strip().split(":")[0].split("-")[-1]}")
+        print(f"CAPEC NAME:  {name.strip()}")
+        print(f"DESCRIPTION: {description}")
+        print(f"URL:         {full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}")
+        print(f"CWE links:   "), print(*cwe_link,sep="\n")
+        print(f"CWE ID - NAME: "), print(*cwe.items(),sep="\n")
+        print("###################################################################")
+
+            #write it as sql query
+        async with aiofiles.open("capec_insert_query.txt", "a") as file:
+            if i + 1 != len(sites):
+                await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
+            else:
+                await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '' ; \n")
+
+
+
+
+
 
 
 
