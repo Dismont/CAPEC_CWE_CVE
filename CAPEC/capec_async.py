@@ -226,7 +226,8 @@ async def main():
     CAPEC_FULL_URL = "https://capec.mitre.org/data/definitions/1000.html"
 
     # main code
-    type = get_type_of_capec(url=CAPEC_FULL_URL)
+    block_one = []
+    types = get_type_of_capec(url=CAPEC_FULL_URL)
     links = get_base_urls(url=CAPEC_FULL_URL, base_url=CAPEC_BASE_URL)
     for i in range(len(type)):
         print(f"Capec - {links[i]} - {type[i]}")
