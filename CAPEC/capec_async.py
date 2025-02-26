@@ -187,14 +187,22 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[di
         # print(f"Cwe Id - Name: "), print(*cwe.items(),sep="\n")
         # print("###################################################################")
         if name.strip().split(":")[0].split("-")[-1].isdigit():
-            block_two.append({  "id"   :   int(name.strip().split(":")[0].split("-")[-1]),
-                                "name" :   name.strip(),
-                                "description" : description,
-                                "url" : full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}"),
-                                "parentOf" : [*parent_list] })
+            block_two.append({  "Id"   :   int(name.strip().split(":")[0].split("-")[-1]),
+                                "Name" :   name.strip(),
+                                "Description" : description,
+                                "ParentOf" : [*parent_list] })
     return block_two
 
-
+def writing_insert_capec(*, data: list[dict[str, int]]) -> None:
+    with open("capec_insert_query.sql", "a") as file:
+        file.write("insert into capec (id, capec_id, capec_name, capec_description,capec_link, capec_type) values ")
+        for i in range(len(data)):
+            if i+1 != len(data):
+                file.write(f"({data[i].get("Id")}, '{data[i].get("Name").replace("\'","").replace("\\","")}', '{data[i].get("Description").replace("\'","").replace("\\","")}', '{data[i].get("Link").replace("\'","").replace("\\","")}', '{data[i].get("Type").replace("\'","").replace("\\","")}' ),\n")
+            else:
+                file.write(f"({data[i].get("Id")}, '{data[i].get("Name").replace("\'","").replace("\\","")}', '{data[i].get("Description").replace("\'","").replace("\\","")}', '{data[i].get("Link").replace("\'","").replace("\\","")}', '{data[i].get("Type").replace("\'","").replace("\\","")}' );\n")
+        file.close()
+    print("Файл `capec_insert_query.sql` записан!")
 
 async def main():
     # --- CONST ---
@@ -221,9 +229,31 @@ async def main():
         html_data = await http_request_of_url(links=links)
         block_two = await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL)
 
-    print(*block_one, sep="\n")
-    print("??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ")
-    print(*block_two, sep="\n")
+    # print(*block_one, sep="\n")
+    # print("??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ")
+    # print(*block_two, sep="\n")
+
+    # - Финальный dict[], объединяющий всё в один единственный поток данных
+    if len(block_one) == len(block_two):
+        print(" БЛОКИ block_one и block_two ОДИНАКОВЫЕ!")
+    else:
+        print(" БЛОКИ block_one и block_two разного размера!")
+
+    block_finally : list[dict] = []
+    for i in range(len(block_one)):
+        for j in range(len(block_two)):
+            if block_one[i]["Id"] == block_two[j]["Id"]:
+                block_finally.append(block_one[i] | block_two[j])
+                break
+
+    # print(*block_finally, sep="\n")
+    # - Мы имеем данную структуру словаря
+    # Id : int, Link : str, Type : str, Name : str, Description : str, ParentOf : list[int]
+
+    writing_insert_capec(data=block_finally)
+
+
+
 
 
 
