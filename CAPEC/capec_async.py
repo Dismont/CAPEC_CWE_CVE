@@ -123,7 +123,7 @@ async def http_request_of_url(*, links:list[str]) -> list[dict[str, str]] | None
 
 
 
-async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> dict[str, int] | None:
+async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[dict[str, int]] | None:
     """
     Асинхронный метод для конечного парсинга сайта конкретного CAPEC
     Получение: CapecID, CapecName, CapecDescription, CapecUrl, CapecToCweLinks, CapecToCweId
@@ -131,7 +131,7 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> dict[st
     :param full_url: 'https://capec.mitre.org/data/ ...'
     :return: dict [ str ]
     """
-
+    block_two = []
     for i in range(len(sites)):
 
         # part 0 - Initialisation
@@ -186,12 +186,12 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> dict[st
         print(f"Cwe Id - Name: "), print(*cwe.items(),sep="\n")
         print("###################################################################")
 
-        return { "id"   :   int(name.strip().split(":")[0].split("-")[-1]),
-                 "name" :   name.strip(),
-                 "description" : description,
-                 "url" : full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}"),
-                 "parentOf" : [*parent_list]
-                 }
+        block_two.append({  "id"   :   int(name.strip().split(":")[0].split("-")[-1]),
+                            "name" :   name.strip(),
+                            "description" : description,
+                            "url" : full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}"),
+                            "parentOf" : [*parent_list] })
+    return block_two
 
 
 
@@ -221,7 +221,7 @@ async def main():
     if links:
         html_data = await http_request_of_url(links=links)
         block_two.append( await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL))
-    print(*block_one, sep="\n")
+    print(*block_two, sep="\n")
         # - Собираю второй словарь block_two = {Id : value(int), Name : value(str), Description : value(str), ParentOf: [1, 2, 3]}
 
 
