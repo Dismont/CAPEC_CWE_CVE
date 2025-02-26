@@ -145,16 +145,7 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> dict[st
         div_description = html_data.find("div", class_ = "indent")
         description = div_description.get_text().strip()
 
-        # part 3 - Related Weaknesses
-        # <div id='Related_Weaknesses'>
-        #   <table>
-        #       <tr>
-        #   this -->|   <td> <a href='XXXX'> 522 </a> </td>
-        #   this -->|   <td> text-to-text </td>
-        #       </tr>
-        #   </table>
-        # </div>
-
+        # part 3 - Related Weaknesses (<div class="Related_Weaknesses"> <table> <td> ... )
         cwe_link = []
         cwe = {}
         div_related_weaknesses = html_data.find("div", id="Related_Weaknesses")
