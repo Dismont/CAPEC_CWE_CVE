@@ -221,7 +221,7 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[st
 async def main():
     # --- CONST ---
     #     CAPEC
-    CAPEC_NAME = "CAPEC"
+    # CAPEC_NAME = "CAPEC"
     CAPEC_BASE_URL = "https://capec.mitre.org/"
     CAPEC_FULL_URL = "https://capec.mitre.org/data/definitions/1000.html"
 
