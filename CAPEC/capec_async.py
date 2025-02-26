@@ -177,14 +177,14 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[di
 
 
         # ---> stdout dict
-        print(f"Capec Id:      {name.strip().split(":")[0].split("-")[-1]}")
-        print(f"Capec Name:    {name.strip()}")
-        print(f"Description:   {description}")
-        print(f"Url:           {full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}")
-        print(f"ParentOf:      "), print(*parent_list, sep="\n")
-        print(f"Cwe Links:     "), print(*cwe_link,sep="\n")
-        print(f"Cwe Id - Name: "), print(*cwe.items(),sep="\n")
-        print("###################################################################")
+        # print(f"Capec Id:      {name.strip().split(":")[0].split("-")[-1]}")
+        # print(f"Capec Name:    {name.strip()}")
+        # print(f"Description:   {description}")
+        # print(f"Url:           {full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}")
+        # print(f"ParentOf:      "), print(*parent_list, sep="\n")
+        # print(f"Cwe Links:     "), print(*cwe_link,sep="\n")
+        # print(f"Cwe Id - Name: "), print(*cwe.items(),sep="\n")
+        # print("###################################################################")
         if name.strip().split(":")[0].split("-")[-1].isdigit():
             block_two.append({  "id"   :   int(name.strip().split(":")[0].split("-")[-1]),
                                 "name" :   name.strip(),
@@ -203,26 +203,27 @@ async def main():
     CAPEC_FULL_URL = "https://capec.mitre.org/data/definitions/1000.html"
 
     # main code
-    block_one = []
     types = get_type_of_capec(url=CAPEC_FULL_URL)
     links = get_base_urls(url=CAPEC_FULL_URL, base_url=CAPEC_BASE_URL)
 
     # - Создаю словарь block_one = {Id : value(int), Link : value(str), Type: value(str)}
+    block_one = []
     for i in range(len(types)):
         data_one_block = {"Id": int(links[i].split("/")[6].replace(".html", "")),
                           "Link" : f"{links[i]}",
                           "Type" : f"{types[i]}" }
         block_one.append(data_one_block)
-    print(*block_one, sep="\n")
-    print("??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ")
 
-    block_two = []
-
+    block_two = None
+    # - Собираю второй словарь block_two = {Id : value(int), Name : value(str), Description : value(str), ParentOf: [1, 2, 3]}
     if links:
         html_data = await http_request_of_url(links=links)
         block_two = await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL)
+
+    print(*block_one, sep="\n")
+    print("??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ")
     print(*block_two, sep="\n")
-        # - Собираю второй словарь block_two = {Id : value(int), Name : value(str), Description : value(str), ParentOf: [1, 2, 3]}
+
 
 
 
