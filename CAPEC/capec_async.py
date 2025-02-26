@@ -220,7 +220,7 @@ async def main():
 
     if links:
         html_data = await http_request_of_url(links=links)
-        block_two.append( await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL))
+        block_two = await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL)
     print(*block_two, sep="\n")
         # - Собираю второй словарь block_two = {Id : value(int), Name : value(str), Description : value(str), ParentOf: [1, 2, 3]}
 
