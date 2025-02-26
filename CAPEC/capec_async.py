@@ -160,7 +160,7 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> dict[st
                         cwe_link.append(a_related_weaknesses[0].get("href"))
 
 
-        # part 4 - Relationship
+        # part 4 - Relationship (<div class="relevant_table"> <table> <td> <tr> ParentOf ... )
         parent_list = []
         div_relationship = html_data.find("div", id="relevant_table")
         if div_relationship:
