@@ -169,14 +169,31 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[st
                         a_related_weaknesses = td_related_weaknesses[j].find_all("a")
                         cwe_link.append(a_related_weaknesses[0].get("href"))
 
-                    # print(*cwe_link,sep="\n")
-            # ---> stdout dict
-        print(f"CAPEC ID:    {name.strip().split(":")[0].split("-")[-1]}")
-        print(f"CAPEC NAME:  {name.strip()}")
-        print(f"DESCRIPTION: {description}")
-        print(f"URL:         {full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}")
-        print(f"CWE links:   "), print(*cwe_link,sep="\n")
-        print(f"CWE ID - NAME: "), print(*cwe.items(),sep="\n")
+
+        # part 4 - Relationship
+        parent_list = []
+        div_relationship = html_data.find("div", id="relevant_table")
+        if div_relationship:
+            # print(f"Total Relationship {name}: {len(div_relationship)}")
+            table_relationship = div_relationship.find("table")
+            if table_relationship:
+                td_relationship = table_relationship.find_all("td")
+                # print(f"Parent Of Table - {name}:")
+                for j in range(0,len(td_relationship),4):
+                    if td_relationship[j].get_text() == "ParentOf":
+                        parent_list.append(int(td_relationship[j+2].get_text()))
+                        # print(f"{td_relationship[j].get_text()} : {td_relationship[j+2].get_text()} ")
+
+
+
+        # ---> stdout dict
+        print(f"Capec Id:      {name.strip().split(":")[0].split("-")[-1]}")
+        print(f"Capec Name:    {name.strip()}")
+        print(f"Description:   {description}")
+        print(f"Url:           {full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}")
+        print(f"ParentOf:      "), print(*parent_list, sep="\n")
+        print(f"Cwe Links:     "), print(*cwe_link,sep="\n")
+        print(f"Cwe Id - Name: "), print(*cwe.items(),sep="\n")
         print("###################################################################")
 
             #write it as sql query
