@@ -163,10 +163,10 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[st
             table_related_weaknesses = div_related_weaknesses.find("table")
             if table_related_weaknesses:
                 td_related_weaknesses = table_related_weaknesses.find_all("td")
-                for i in range(0,len(td_related_weaknesses),2):
-                    cwe.update({td_related_weaknesses[i].get_text():td_related_weaknesses[i+1].get_text()})
-                    if td_related_weaknesses[i]:
-                        a_related_weaknesses = td_related_weaknesses[i].find_all("a")
+                for j in range(0,len(td_related_weaknesses),2):
+                    cwe.update({td_related_weaknesses[j].get_text():td_related_weaknesses[j+1].get_text()})
+                    if td_related_weaknesses[j]:
+                        a_related_weaknesses = td_related_weaknesses[j].find_all("a")
                         cwe_link.append(a_related_weaknesses[0].get("href"))
 
                     # print(*cwe_link,sep="\n")
