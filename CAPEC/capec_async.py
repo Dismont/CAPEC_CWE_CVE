@@ -148,14 +148,14 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[di
 
         # part 3 - Related Weaknesses (<div class="Related_Weaknesses"> <table> <td> ... )
         cwe_link = []
-        cwe = {}
+        cwe_id = []
         div_related_weaknesses = html_data.find("div", id="Related_Weaknesses")
         if div_related_weaknesses:
             table_related_weaknesses = div_related_weaknesses.find("table")
             if table_related_weaknesses:
                 td_related_weaknesses = table_related_weaknesses.find_all("td")
                 for j in range(0,len(td_related_weaknesses),2):
-                    cwe.update({td_related_weaknesses[j].get_text():td_related_weaknesses[j+1].get_text()})
+                    cwe_id.append(td_related_weaknesses[j].get_text())
                     if td_related_weaknesses[j]:
                         a_related_weaknesses = td_related_weaknesses[j].find_all("a")
                         cwe_link.append(a_related_weaknesses[0].get("href"))
@@ -190,7 +190,8 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[di
             block_two.append({  "Id"   :   int(name.strip().split(":")[0].split("-")[-1]),
                                 "Name" :   name.strip(),
                                 "Description" : description,
-                                "ParentOf" : [*parent_list] })
+                                "ParentOf"  : [*parent_list],
+                                "CweId"     : [*cwe_id] })
     return block_two
 
 def writing_insert_capec(*, data: list[dict[str, int]]) -> None:
@@ -207,9 +208,9 @@ def writing_insert_capec(*, data: list[dict[str, int]]) -> None:
 
 
 def writing_insert_capec_parentof(*, data: list[dict[str, int]]) -> None:
+
     with open("capec_parentof_insert_query.sql", "a") as file:
         file.write("insert into capec_parentof (id, capec_parent, capec_child) values ")
-
         for i in range(len(data)):
             for j in range(len(data[i].get("ParentOf"))):
                 if i+1 != len(data):
@@ -222,7 +223,6 @@ def writing_insert_capec_parentof(*, data: list[dict[str, int]]) -> None:
 
 
 def writing_capec_all_data(*, data: list[dict[str, int]]) -> None:
-
     with open("capec_all_data.txt", "a") as file:
         for i in range(len(data)):
             file.write(f"{data[i]["Id"]}, {data[i]["Name"]}, {data[i]["Link"]}, {data[i]["Type"]}, {data[i]["ParentOf"]}\n{data[i]["Description"]}\n")
@@ -230,9 +230,25 @@ def writing_capec_all_data(*, data: list[dict[str, int]]) -> None:
     print("Файл `capec_all_data.txt` записан!")
 
 
+def writing_capec_to_cwe(*, data: list[dict[str,str]]) -> None:
+
+    with open("capec_to_cwe.sql", "a") as file:
+        file.write("insert into capec_to_cwe (id, capec_id, cwe_id) values \n")
+        for i in range(len(data)):
+            if len(data[i]["CweId"]) != 0:
+                for j in range(len(data[i]["CweId"])):
+                    if i+1 != len(data):
+                        file.write(f"( {data[i]['Id']}, {data[i]['CweId'][j]} ),\n")
+                    else:
+                        file.write(f"( {data[i]['Id']}, {data[i]['CweId'][j]} );\n")
+            else:
+                continue
+        print("Файл `capec_to_cwe.sql` записан!")
+        file.close()
+
 
 async def main():
-    # --- CONST ---
+    # --- CONST --
     #     CAPEC
     # CAPEC_NAME = "CAPEC"
     CAPEC_BASE_URL = "https://capec.mitre.org/"
@@ -278,7 +294,8 @@ async def main():
     # Id : int, Link : str, Type : str, Name : str, Description : str, ParentOf : list[int]
 
     # writing_insert_capec(data=block_finally)
-    writing_capec_all_data(data=block_finally)
+    #writing_capec_all_data(data=block_finally)
+    writing_capec_to_cwe(data=block_finally)
 
 
 
