@@ -35,6 +35,8 @@ CAPEC подразделяется на несколько групп:
 | Detail Attack Pattern   | D          |
 | Standard Attack Pattern | S          |
 
+
+---
 ### 2. CWE
 
 #### Необходимо получить информацию с сайта https://cwe.mitre.org/data/definitions/1000.html
