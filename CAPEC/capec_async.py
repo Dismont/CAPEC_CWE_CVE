@@ -185,12 +185,12 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[di
         print(f"Cwe Links:     "), print(*cwe_link,sep="\n")
         print(f"Cwe Id - Name: "), print(*cwe.items(),sep="\n")
         print("###################################################################")
-
-        block_two.append({  "id"   :   int(name.strip().split(":")[0].split("-")[-1]),
-                            "name" :   name.strip(),
-                            "description" : description,
-                            "url" : full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}"),
-                            "parentOf" : [*parent_list] })
+        if name.strip().split(":")[0].split("-")[-1].isdigit():
+            block_two.append({  "id"   :   int(name.strip().split(":")[0].split("-")[-1]),
+                                "name" :   name.strip(),
+                                "description" : description,
+                                "url" : full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}"),
+                                "parentOf" : [*parent_list] })
     return block_two
 
 
