@@ -7,7 +7,7 @@
 
 ---
 
-### 1. CAPEC
+### 1. CAPEC - 26.02.2025
 
 #### Необходимо получить информацию с сайта https://capec.mitre.org/data/definitions/1000.html 
 
@@ -36,7 +36,7 @@ CAPEC подразделяется на несколько групп:
 
 
 ---
-### 2. CWE
+### 2. CWE - 27.02.2025
 
 #### Необходимо получить информацию с сайта https://cwe.mitre.org/data/definitions/1000.html
 
