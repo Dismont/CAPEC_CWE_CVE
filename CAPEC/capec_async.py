@@ -229,11 +229,27 @@ async def main():
     block_one = []
     types = get_type_of_capec(url=CAPEC_FULL_URL)
     links = get_base_urls(url=CAPEC_FULL_URL, base_url=CAPEC_BASE_URL)
-    for i in range(len(type)):
-        print(f"Capec - {links[i]} - {type[i]}")
-    # if links:
-    #     html_data = await http_request_of_url(links=links)
-    #     await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL)
+
+    # - Создаю словарь block_one = {Id : value(int), Link : value(str), Type: value(str)}
+    for i in range(len(types)):
+        data_one_block = {"Id": int(links[i].split("/")[6].replace(".html", "")),
+                          "Link" : f"{links[i]}",
+                          "Type" : f"{types[i]}" }
+        block_one.append(data_one_block)
+    print(*block_one, sep="\n")
+    print("??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ")
+
+    block_two = []
+
+    if links:
+        html_data = await http_request_of_url(links=links)
+        block_two.append( await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL))
+    print(*block_one, sep="\n")
+        # - Собираю второй словарь block_two = {Id : value(int), Name : value(str), Description : value(str), ParentOf: [1, 2, 3]}
+
+
+
+
 
 
 
