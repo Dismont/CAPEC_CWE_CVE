@@ -78,6 +78,7 @@ def get_type_of_capec (*,url:str) -> list[str] | None:
         exit()
 
 
+
 async def fetch_link(*,link: str, session: aiohttp.ClientSession) -> dict[str,str] | None:
     """
     Асинхронный метод для запроса ко всем перечисленным ссылками и передает html в формате str
