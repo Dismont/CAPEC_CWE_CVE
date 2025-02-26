@@ -204,6 +204,33 @@ def writing_insert_capec(*, data: list[dict[str, int]]) -> None:
         file.close()
     print("Файл `capec_insert_query.sql` записан!")
 
+
+
+def writing_insert_capec_parentof(*, data: list[dict[str, int]]) -> None:
+    with open("capec_parentof_insert_query.sql", "a") as file:
+        file.write("insert into capec_parentof (id, capec_parent, capec_child) values ")
+
+        for i in range(len(data)):
+            for j in range(len(data[i].get("ParentOf"))):
+                if i+1 != len(data):
+                    file.write(f"({data[i].get("Id")}, {data[i].get("ParentOf")[j]} ),\n")
+                else:
+                    file.write(f"({data[i].get("Id")}, {data[i].get("ParentOf")[j]} );\n")
+                    file.close()
+    print("Файл `capec_parentof_insert_query.sql` записан!")
+
+
+
+def writing_capec_all_data(*, data: list[dict[str, int]]) -> None:
+
+    with open("capec_all_data.txt", "a") as file:
+        for i in range(len(data)):
+            file.write(f"{data[i]["Id"]}, {data[i]["Name"]}, {data[i]["Link"]}, {data[i]["Type"]}, {data[i]["ParentOf"]}\n{data[i]["Description"]}\n")
+        file.close()
+    print("Файл `capec_all_data.txt` записан!")
+
+
+
 async def main():
     # --- CONST ---
     #     CAPEC
@@ -250,7 +277,8 @@ async def main():
     # - Мы имеем данную структуру словаря
     # Id : int, Link : str, Type : str, Name : str, Description : str, ParentOf : list[int]
 
-    writing_insert_capec(data=block_finally)
+    # writing_insert_capec(data=block_finally)
+    writing_capec_all_data(data=block_finally)
 
 
 
