@@ -129,7 +129,7 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> dict[st
     Получение: CapecID, CapecName, CapecDescription, CapecUrl, CapecToCweLinks, CapecToCweId
     :param sites: list[ dict{ 'html' : html(str), 'url' : url(str) }, ... ]
     :param full_url: 'https://capec.mitre.org/data/ ...'
-    :return: ??? -> maybe file .sql  (insert into db ... )
+    :return: dict [ str ]
     """
 
     for i in range(len(sites)):
@@ -192,31 +192,6 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> dict[st
                  "url" : full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}"),
                  "parentOf" : [*parent_list]
                  }
-
-        # - write it as sql query
-
-        # create file for writting sql query
-        # async with aiofiles.open("capec_insert_query.sql", "a") as file:
-        #     await file.write(
-        #         "insert into capec (id, capec_id, capec_name, capec_description, capec_url, capec_type) values \n")
-        # async with aiofiles.open("capec_insert_query.sql", "a") as file:
-        #     if i + 1 != len(sites):
-        #         #                       CapecID,                                    CapecName,       CapecDescription,                                      CapecUrl,                                          CapecType -
-        #         if name.strip().split(":")[0].split("-")[-1].isdigit():
-        #             await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip().replace("\'", "`")}', '{description.replace("\'", "`")}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', ''), \n")
-        #         else:
-        #             print("Пропущенно!")
-        #             print(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
-        #     else:
-        #         if name.strip().split(":")[0].split("-")[-1].isdigit():
-        #             await file.write(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000",f"{name.strip().split(":")[0].split("-")[-1]}")}', '') ; \n")
-        #             print("Пропущенно!")
-        #             print(f"({name.strip().split(":")[0].split("-")[-1]}, '{name.strip()}', '{description}', '{full_url.replace("1000", f"{name.strip().split(":")[0].split("-")[-1]}")}', '', \n")
-
-
-
-
-
 
 
 
