@@ -179,13 +179,6 @@ INNER JOIN
 
 
 
-
-
-
-
-
-
-
 def main():
     db = CapecCweCve("CAPEC_CWE_CVE.db")
 
@@ -204,15 +197,27 @@ def main():
 
 # insert `CAPEC`
     # db.bruter_file(data="SQL QUERY/INSERT_capec_ENTITY_query.sql")
-    db.insert_into_capec(data="SQL QUERY/INSERT_capec_ENTITY_query_fix.sql")
+    # db.insert_into_capec(data="SQL QUERY/INSERT_capec_ENTITY_query_fix.sql")
+
+# insert `CAPEC_parentof`
+    # db.bruter_file(data="SQL QUERY/INSERT_capec_parentof_query.sql")
+    # db.insert_into_capec(data="SQL QUERY/INSERT_capec_parentof_query_fix.sql")
+
 # --- --- --- --- --- DROPPER --- --- --- --- --- --- ---
 
 # !!! DROPER `CAPEC`
     # dropper_capec(connect=connection,cursor=cursor)
 
+
+# --- --- --- --- --- SELECT --- --- --- --- --- --- ---
+
+# SELECT INNER JOIN (CAPEC_parentof)
+    db.select_join_capec_parentof()
+
 # =======================================================================================================
 
-
+    # CLOSE CONNECTION DB
+    db.connection.close()
 
 
 if __name__ == "__main__":
