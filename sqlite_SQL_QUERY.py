@@ -130,6 +130,31 @@ class CapecCweCve:
 
 
 
+    def select_join_capec_parentof(self):
+        #
+        # id, caped_parent_id, caped_child_id
+        # select CAPEC.id, CAPEC.id
+        self.cursor.execute("""
+        SELECT 
+    parent.capec_name AS `Имя родителя`,
+    child.capec_name AS `Имя наследника`
+FROM 
+    CAPEC_parentof
+INNER JOIN 
+    CAPEC AS parent
+    ON CAPEC_parentof.capec_parent = parent.capec_id
+INNER JOIN 
+    CAPEC AS child
+    ON CAPEC_parentof.capec_child = child.capec_id;     
+        """)
+
+        # Получаем все строки результатов
+        rows = self.cursor.fetchall()
+
+        # Выводим данные
+        for row in rows:
+            print(row)
+
     @staticmethod
     def bruter_file(*,data:str):
 
