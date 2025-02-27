@@ -128,6 +128,8 @@ class CapecCweCve:
             self.connection.commit()
             print(f"Таблица `CAPEC` заполнена\n - Использовалось: {data}")
 
+
+
     @staticmethod
     def bruter_file(*,data:str):
 
