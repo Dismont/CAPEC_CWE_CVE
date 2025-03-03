@@ -196,6 +196,8 @@ INNER JOIN
         for row in rows:
             print(row)
 
+
+
     @staticmethod
     def bruter_file(*,data:str):
 
