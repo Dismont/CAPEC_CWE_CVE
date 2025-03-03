@@ -238,9 +238,9 @@ def writing_cwe_to_cve(*, data: list[dict[str,str]]) -> None:
             if len(data[i]["CveId"]) != 0:
                 for j in range(len(data[i]["CveId"])):
                     if i+1 != len(data):
-                        file.write(f"( {data[i]['Id']}, {data[i]['CveId'][j]} ),\n")
+                        file.write(f"( {data[i]['Id']}, '{data[i]['CveId'][j]}' ),\n")
                     else:
-                        file.write(f"( {data[i]['Id']}, {data[i]['CveId'][j]} );\n")
+                        file.write(f"( {data[i]['Id']}, '{data[i]['CveId'][j]}' );\n")
             else:
                 continue
         print("Файл `cwe_to_cve.sql` записан!")
@@ -295,8 +295,8 @@ async def main():
 
     # writing_insert_cwe(data=block_finally)
     # writing_cwe_all_data(data=block_finally)
-    # writing_cwe_to_cve(data=block_finally)
-    writing_insert_cwe_parentof(data=block_finally)
+    writing_cwe_to_cve(data=block_finally)
+    # writing_insert_cwe_parentof(data=block_finally)
 
 
 
