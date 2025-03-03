@@ -87,6 +87,7 @@ class CapecCweCve:
                 print("Таблица `CAPEC_to_CWE` создана!")
                 self.connection.commit()
 
+# ---------------------------------------------------------------------------------------------------
 
     def create_table_cwe(self) -> None:
         """create table `CWE`
