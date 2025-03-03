@@ -256,6 +256,9 @@ def main():
     # db.bruter_file(data="SQL QUERY/INSERT_capec_parentof_query.sql")
     # db.insert_into_capec(data="SQL QUERY/INSERT_capec_parentof_query_fix.sql")
 
+# insert `CWE`
+    # db.bruter_file(data="SQL QUERY/INSERT_cwe_ENTITY_query.sql")
+    # db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_ENTITY_query_fix.sql")
 # --- --- --- --- --- DROPPER --- --- --- --- --- --- ---
 
 # !!! DROPER `CAPEC`
