@@ -10,20 +10,20 @@ class CapecCweCve:
 
 
     def create_table_capec(self) -> None:
-            """ create table `CAPEC`
+        """ create table `CAPEC`
 
-            (
-                - id INT AUTOINCREMENT UNIQUE NOT NULL,
-                - capec_id INT UNIQUE NOT NULL,
-                - capec_name VARCHAR(100) NOT NULL,
-                - capec_description TEXT NOT NULL,
-                - capec_type VARCHAR(40) NOT NULL
-            );
-            :param self:
-            :return:        None
-            """
-            try:
-                self.cursor.execute("""
+        (
+            - id INT AUTOINCREMENT UNIQUE NOT NULL,
+            - capec_id INT UNIQUE NOT NULL,
+            - capec_name VARCHAR(100) NOT NULL,
+            - capec_description TEXT NOT NULL,
+            - capec_type VARCHAR(40) NOT NULL
+        );
+        :param self:
+        :return:        None
+        """
+        try:
+            self.cursor.execute("""
                 create table IF NOT EXISTS `CAPEC`(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 capec_id INTEGER NOT NULL UNIQUE,
@@ -32,62 +32,62 @@ class CapecCweCve:
                 capec_link VARCHAR(55) NOT NULL UNIQUE,
                 capec_type VARCHAR(50) NOT NULL
                 ); """)
-            except Exception as e:
-                print(f"Error: {e}")
-            else:
-                print("Таблица `CAPEC` создана!")
-                self.connection.commit()
+        except Exception as e:
+            print(f"Error: {e}")
+        else:
+            print("Таблица `CAPEC` создана!")
+            self.connection.commit()
 
     def create_table_capec_parentof(self) -> None:
-            """ create table `CAPEC_parentof`
+        """ create table `CAPEC_parentof`
 
-             create table IF NOT EXISTS `CAPEC_parentof`
-            (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                capec_parent INTEGER NOT NULL,
-                capec_child INTEGER NOT NULL
-            );
-            :return:        None
-            """
-            try:
-                self.cursor.execute("""
+         create table IF NOT EXISTS `CAPEC_parentof`
+        (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            capec_parent INTEGER NOT NULL,
+            capec_child INTEGER NOT NULL
+        );
+        :return:        None
+        """
+        try:
+            self.cursor.execute("""
                 create table IF NOT EXISTS `CAPEC_parentof`(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 capec_parent INTEGER NOT NULL,
                 capec_child INTEGER NOT NULL
                 ); """)
-            except Exception as e:
-                print(f"Error: {e}")
-            else:
-                print("Таблица `CAPEC_parentof` создана!")
-                self.connection.commit()
+        except Exception as e:
+            print(f"Error: {e}")
+        else:
+            print("Таблица `CAPEC_parentof` создана!")
+            self.connection.commit()
 
     def create_table_capec_to_cwe(self) -> None:
-            """ create table `CAPEC_to_CWE`
+        """ create table `CAPEC_to_CWE`
 
-             create table IF NOT EXISTS `CAPEC_to_CWE`
-            (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                capec_id INTEGER NOT NULL,
-                cwe_id INTEGER NOT NULL
-            );
+         create table IF NOT EXISTS `CAPEC_to_CWE`
+        (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            capec_id INTEGER NOT NULL,
+            cwe_id INTEGER NOT NULL
+        );
 
-            :return:        None
-            """
-            try:
-                self.cursor.execute("""
+        :return:        None
+        """
+        try:
+            self.cursor.execute("""
                 create table IF NOT EXISTS `CAPEC_to_CWE` (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 capec_id INTEGER NOT NULL,
                 cwe_id INTEGER NOT NULL
                 );""")
-            except Exception as e:
-                print(f"Error: {e}")
-            else:
-                print("Таблица `CAPEC_to_CWE` создана!")
-                self.connection.commit()
+        except Exception as e:
+            print(f"Error: {e}")
+        else:
+            print("Таблица `CAPEC_to_CWE` создана!")
+            self.connection.commit()
 
-# ---------------------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------------------
 
     def create_table_cwe(self) -> None:
         """create table `CWE`
@@ -119,20 +119,20 @@ class CapecCweCve:
             self.connection.commit()
 
     def dropper_capec(self) -> None:
-            """DROP TABLE `CAPEC`;
+        """DROP TABLE `CAPEC`;
 
-            :return:        None
-            """
+        :return:        None
+        """
 
-            try:
-                self.cursor.execute("""
+        try:
+            self.cursor.execute("""
                 DROP TABLE `CAPEC`;
                 """)
-            except Exception as e:
-                print(f"Error: {e}")
-            else:
-                print("Таблица `CAPEC` УДАЛЕНА !")
-                self.connection.commit()
+        except Exception as e:
+            print(f"Error: {e}")
+        else:
+            print("Таблица `CAPEC` УДАЛЕНА !")
+            self.connection.commit()
 
 
 
@@ -160,26 +160,27 @@ class CapecCweCve:
     def insert_into_cwe(self,*, data:str) -> None:
 
         i = 0
-        try:
-            text = ""
-            with open(data, "r") as file:
-                lines = file.readlines()
-                file.close()
+
+        text = ""
+        with open(data, "r") as file:
+            lines = file.readlines()
+            file.close()
+
 
 
             for i in range(1,len(lines)):
-                self.cursor.execute(f"{lines[0]} {lines[i].replace("),", ");")}")
+                try:
+                    self.cursor.execute(f"{lines[0]} {lines[i].replace("),", ");")}")
+                except Exception as e:
+                    print(f"Строка: {i}")
+                    print(f"Error : {e}")
+                    continue
 
-        except Exception as e:
-            print(f"Строка: {i}")
-            print(f"Error : {e}")
-
-        else:
             self.connection.commit()
             print(f"Таблица `CWE` заполнена\n - Использовалось: {data}")
 
-    def select_join_capec_parentof(self):
-        #
+    def select_join_capec_parentof(self) -> None:
+
         # id, caped_parent_id, caped_child_id
         # select CAPEC.id, CAPEC.id
         self.cursor.execute("""
@@ -202,6 +203,19 @@ INNER JOIN
         # Выводим данные
         for row in rows:
             print(row)
+
+    def select_all_cwe(self) -> None:
+
+        self.cursor.execute(""" SELECT * FROM CWE;""")
+
+        # Получаем все строки результатов
+        rows = self.cursor.fetchall()
+
+        # Выводим данные
+        for row in rows:
+            print(row)
+
+
 
 
 
@@ -244,7 +258,7 @@ def main():
     # db.create_table_capec_to_cwe()
 
 # create table `CWE` IF NOT EXISTS
-    db.create_table_cwe()
+    # db.create_table_cwe()
 
 # --- --- --- --- --- INSERTER --- --- --- --- --- --- ---
 
@@ -270,6 +284,8 @@ def main():
 # SELECT INNER JOIN (CAPEC_parentof)
 #     db.select_join_capec_parentof()
 
+# SELECT * FROM CWE
+    db.select_all_cwe()
 # =======================================================================================================
 
     # CLOSE CONNECTION DB
