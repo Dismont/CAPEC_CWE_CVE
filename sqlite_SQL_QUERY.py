@@ -222,6 +222,9 @@ def main():
 # create table `CAPEC_to_CWE` IF NOT EXISTS ✔
     # db.create_table_capec_to_cwe()
 
+# create table `CWE` IF NOT EXISTS
+    db.create_table_cwe()
+
 # --- --- --- --- --- INSERTER --- --- --- --- --- --- ---
 
 # insert `CAPEC`
