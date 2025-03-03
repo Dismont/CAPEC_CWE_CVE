@@ -147,6 +147,8 @@ class CapecCweCve:
             print("Таблица `CWE_to_CVE` создана!")
             self.connection.commit()
 
+
+
     def dropper_capec(self) -> None:
         """DROP TABLE `CAPEC`;
 
@@ -312,6 +314,9 @@ def main():
 # create table `CWE_parentof` IF NOT EXISTS
 #     db.create_table_cwe_parentof()
 
+# create table `CWE_to_CVE` IF NOT EXISTS
+    db.create_table_cwe_to_cve()
+
 # --- --- --- --- --- INSERTER --- --- --- --- --- --- ---
 
 # insert `CAPEC`
@@ -330,6 +335,9 @@ def main():
     # db.bruter_file(data="SQL QUERY/INSERT_cwe_parentof_query.sql")
     # db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_parentof_query_fix.sql")
 
+# insert `CWE_to_CVE`
+    db.bruter_file(data="SQL QUERY/INSERT_cwe_to_cve_query.sql")
+    db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_to_cve_query_fix.sql")
 # --- --- --- --- --- DROPPER --- --- --- --- --- --- ---
 
 # !!! DROPER `CAPEC`
