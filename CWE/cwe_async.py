@@ -35,7 +35,7 @@ def get_base_urls(*,url:str,base_url:str) -> list[str] | None:
 
 
 
-def get_type_of_capec (*,url:str) -> list[str] | None:
+def get_type_of_cwe (*,url:str) -> list[str] | None:
     try:
         response = requests.get(url)
         http = BeautifulSoup(response.content, "html.parser")
@@ -47,28 +47,28 @@ def get_type_of_capec (*,url:str) -> list[str] | None:
         if len(all_tag_img) != 0:
             for part_tag_img in all_tag_img:
 
-                # Category - C
+                # Pillar - P
                 if "pillar.gif" in str(part_tag_img.get("src")):
                     types.append("Pillar")
                     iterations += 1
 
-                # Meta Attack Pattern - M
+                # Base - B
                 if "base.gif" in str(part_tag_img.get("src")):
-                    types.append("Meta Attack Pattern")
+                    types.append("Base")
                     iterations += 1
 
-                # Detail Attack Pattern - D
+                # Variant - V
                 if "variant.gif" in str(part_tag_img.get("src")):
-                    types.append("Detail Attack Pattern")
+                    types.append("Variant")
                     iterations += 1
 
-                # Standard Attack Pattern - S
+                # Class - C
                 if "class.gif" in str(part_tag_img.get("src")):
-                    types.append("Standard Attack Pattern")
+                    types.append("Class")
                     iterations += 1
 
             print(f"Total records (Type): {iterations}")
-            # print(f"List type Capce:", *types, sep="\n")
+            # print(f"List type CWE:", *types, sep="\n")
             return types
         else:
             return None
@@ -127,9 +127,9 @@ async def http_request_of_url(*, links:list[str]) -> list[dict[str, str]] | None
 async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[dict[str, int]] | None:
     """
     Асинхронный метод для конечного парсинга сайта конкретного CAPEC
-    Получение: CapecID, CapecName, CapecDescription, CapecUrl, CapecToCweLinks, CapecToCweId
+    Получение: CweID, CweName, CweDescription, CweUrl, CweToCveLinks, CweToCveId
     :param sites: list[ dict{ 'html' : html(str), 'url' : url(str) }, ... ]
-    :param full_url: 'https://capec.mitre.org/data/ ...'
+    :param full_url: 'https://cwe.mitre.org/data/ ...'
     :return: dict [ str ]
     """
     block_two = []
@@ -147,18 +147,18 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[di
         description = div_description.get_text().strip()
 
         # part 3 - Related Weaknesses (<div class="Related_Weaknesses"> <table> <td> ... )
-        cwe_link = []
-        cwe_id = []
-        div_related_weaknesses = html_data.find("div", id="Related_Weaknesses")
+        cve_link = []
+        cve_id = []
+        div_related_weaknesses = html_data.find("div", id="Observed_Examples")
         if div_related_weaknesses:
             table_related_weaknesses = div_related_weaknesses.find("table")
             if table_related_weaknesses:
                 td_related_weaknesses = table_related_weaknesses.find_all("td")
                 for j in range(0,len(td_related_weaknesses),2):
-                    cwe_id.append(td_related_weaknesses[j].get_text())
-                    if td_related_weaknesses[j]:
-                        a_related_weaknesses = td_related_weaknesses[j].find_all("a")
-                        cwe_link.append(a_related_weaknesses[0].get("href"))
+                    cve_id.append(td_related_weaknesses[j].get_text().replace("\n",""))
+                    # if td_related_weaknesses[j]:
+                    #     a_related_weaknesses = td_related_weaknesses[j].find_all("a")
+                    #     cve_link.append(a_related_weaknesses[0].get("href"))
 
 
         # part 4 - Relationship (<div class="relevant_table"> <table> <td> <tr> ParentOf ... )
@@ -191,25 +191,25 @@ async def parsing_html_data(*,sites:list[dict[str,str]],full_url:str) -> list[di
                                 "Name" :   name.strip(),
                                 "Description" : description,
                                 "ParentOf"  : [*parent_list],
-                                "CweId"     : [*cwe_id] })
+                                "CveId"     : [*cve_id] })
     return block_two
 
-def writing_insert_capec(*, data: list[dict[str, int]]) -> None:
-    with open("capec_insert_query.sql", "a") as file:
-        file.write("insert into capec (id, capec_id, capec_name, capec_description,capec_link, capec_type) values ")
+def writing_insert_cwe(*, data: list[dict[str, int]]) -> None:
+    with open("cwe_insert_query.sql", "a") as file:
+        file.write("insert into CWE ( cwe_id, cwe_name, cwe_description,cwe_link, cwe_type) values ")
         for i in range(len(data)):
             if i+1 != len(data):
-                file.write(f"({data[i].get("Id")}, '{data[i].get("Name").replace("\'","").replace("\\","")}', '{data[i].get("Description").replace("\'","").replace("\\","")}', '{data[i].get("Link").replace("\'","").replace("\\","")}', '{data[i].get("Type").replace("\'","").replace("\\","")}' ),\n")
+                file.write(f"({data[i].get("Id")}, '{data[i].get("Name").replace("\'","").replace("\\","")}', '{data[i].get("Description").replace("\'","").replace("\\","").replace("\n","")}', '{data[i].get("Link").replace("\'","").replace("\\","")}', '{data[i].get("Type").replace("\'","").replace("\\","")}' ),\n")
             else:
-                file.write(f"({data[i].get("Id")}, '{data[i].get("Name").replace("\'","").replace("\\","")}', '{data[i].get("Description").replace("\'","").replace("\\","")}', '{data[i].get("Link").replace("\'","").replace("\\","")}', '{data[i].get("Type").replace("\'","").replace("\\","")}' );\n")
+                file.write(f"({data[i].get("Id")}, '{data[i].get("Name").replace("\'","").replace("\\","")}', '{data[i].get("Description").replace("\'","").replace("\\","").replace("\n", "")}', '{data[i].get("Link").replace("\'","").replace("\\","")}', '{data[i].get("Type").replace("\'","").replace("\\","")}' );\n")
         file.close()
-    print("Файл `capec_insert_query.sql` записан!")
+    print("Файл `cwe_insert_query.sql` записан!")
 
 
 
-def writing_insert_capec_parentof(*, data: list[dict[str, int]]) -> None:
+def writing_insert_cwe_parentof(*, data: list[dict[str, int]]) -> None:
 
-    with open("capec_parentof_insert_query.sql", "a") as file:
+    with open("cwe_parentof_insert_query.sql", "a") as file:
         file.write("insert into capec_parentof (id, capec_parent, capec_child) values ")
         for i in range(len(data)):
             for j in range(len(data[i].get("ParentOf"))):
@@ -218,32 +218,32 @@ def writing_insert_capec_parentof(*, data: list[dict[str, int]]) -> None:
                 else:
                     file.write(f"({data[i].get("Id")}, {data[i].get("ParentOf")[j]} );\n")
                     file.close()
-    print("Файл `capec_parentof_insert_query.sql` записан!")
+    print("Файл `cwe_parentof_insert_query.sql` записан!")
 
 
 
-def writing_capec_all_data(*, data: list[dict[str, int]]) -> None:
-    with open("capec_all_data.txt", "a") as file:
+def writing_cwe_all_data(*, data: list[dict[str, int]]) -> None:
+    with open("cwe_all_data.txt", "a") as file:
         for i in range(len(data)):
             file.write(f"{data[i]["Id"]}, {data[i]["Name"]}, {data[i]["Link"]}, {data[i]["Type"]}, {data[i]["ParentOf"]}\n{data[i]["Description"]}\n")
         file.close()
-    print("Файл `capec_all_data.txt` записан!")
+    print("Файл `cwe_all_data.txt` записан!")
 
 
-def writing_capec_to_cwe(*, data: list[dict[str,str]]) -> None:
+def writing_cwe_to_cve(*, data: list[dict[str,str]]) -> None:
 
-    with open("capec_to_cwe.sql", "a") as file:
-        file.write("insert into capec_to_cwe (id, capec_id, cwe_id) values \n")
+    with open("cwe_to_cve.sql", "a") as file:
+        file.write("insert into CWE_to_CVE (cwe_id, cve_id) values \n")
         for i in range(len(data)):
-            if len(data[i]["CweId"]) != 0:
-                for j in range(len(data[i]["CweId"])):
+            if len(data[i]["CveId"]) != 0:
+                for j in range(len(data[i]["CveId"])):
                     if i+1 != len(data):
-                        file.write(f"( {data[i]['Id']}, {data[i]['CweId'][j]} ),\n")
+                        file.write(f"( {data[i]['Id']}, {data[i]['CveId'][j]} ),\n")
                     else:
-                        file.write(f"( {data[i]['Id']}, {data[i]['CweId'][j]} );\n")
+                        file.write(f"( {data[i]['Id']}, {data[i]['CveId'][j]} );\n")
             else:
                 continue
-        print("Файл `capec_to_cwe.sql` записан!")
+        print("Файл `cwe_to_cve.sql` записан!")
         file.close()
 
 
@@ -251,12 +251,12 @@ async def main():
     # --- CONST --
     #     CAPEC
     # CAPEC_NAME = "CAPEC"
-    CAPEC_BASE_URL = "https://capec.mitre.org/"
-    CAPEC_FULL_URL = "https://capec.mitre.org/data/definitions/1000.html"
+    CWE_BASE_URL = "https://cwe.mitre.org/"
+    CWE_FULL_URL = "https://cwe.mitre.org/data/definitions/1000.html"
 
     # main code
-    types = get_type_of_capec(url=CAPEC_FULL_URL)
-    links = get_base_urls(url=CAPEC_FULL_URL, base_url=CAPEC_BASE_URL)
+    types = get_type_of_cwe(url=CWE_FULL_URL)
+    links = get_base_urls(url=CWE_FULL_URL, base_url=CWE_BASE_URL)
 
     # - Создаю словарь block_one = {Id : value(int), Link : value(str), Type: value(str)}
     block_one = []
@@ -270,7 +270,7 @@ async def main():
     # - Собираю второй словарь block_two = {Id : value(int), Name : value(str), Description : value(str), ParentOf: [1, 2, 3]}
     if links:
         html_data = await http_request_of_url(links=links)
-        block_two = await parsing_html_data(sites=html_data,full_url=CAPEC_FULL_URL)
+        block_two = await parsing_html_data(sites=html_data,full_url=CWE_FULL_URL)
 
     # print(*block_one, sep="\n")
     # print("??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ??? ")
@@ -289,13 +289,13 @@ async def main():
                 block_finally.append(block_one[i] | block_two[j])
                 break
 
-    # print(*block_finally, sep="\n")
+    print(*block_finally, sep="\n")
     # - Мы имеем данную структуру словаря
     # Id : int, Link : str, Type : str, Name : str, Description : str, ParentOf : list[int]
 
-    # writing_insert_capec(data=block_finally)
-    #writing_capec_all_data(data=block_finally)
-    writing_capec_to_cwe(data=block_finally)
+    writing_insert_cwe(data=block_finally)
+    # writing_cwe_all_data(data=block_finally)
+    writing_cwe_to_cve(data=block_finally)
 
 
 
