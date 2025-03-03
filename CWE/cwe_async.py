@@ -293,9 +293,10 @@ async def main():
     # - Мы имеем данную структуру словаря
     # Id : int, Link : str, Type : str, Name : str, Description : str, ParentOf : list[int]
 
-    writing_insert_cwe(data=block_finally)
+    # writing_insert_cwe(data=block_finally)
     # writing_cwe_all_data(data=block_finally)
-    writing_cwe_to_cve(data=block_finally)
+    # writing_cwe_to_cve(data=block_finally)
+    writing_insert_cwe_parentof(data=block_finally)
 
 
 
