@@ -170,6 +170,13 @@ class CapecCweCve:
             for i in range(1,len(lines)):
                 self.cursor.execute(f"{lines[0]} {lines[i].replace("),", ");")}")
 
+        except Exception as e:
+            print(f"Строка: {i}")
+            print(f"Error : {e}")
+
+        else:
+            self.connection.commit()
+            print(f"Таблица `CWE` заполнена\n - Использовалось: {data}")
 
     def select_join_capec_parentof(self):
         #
