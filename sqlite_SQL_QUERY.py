@@ -125,14 +125,13 @@ class CapecCweCve:
                               create table IF NOT EXISTS `CWE_parentof`(
                               id INTEGER PRIMARY KEY AUTOINCREMENT,
                               cwe_parent INTEGER NOT NULL,
-                              cwe_child INTEGER NOT NULL,
+                              cwe_child INTEGER NOT NULL
                               ); """)
         except Exception as e:
             print(f"Error: {e}")
         else:
             print("Таблица `CWE_parentof` создана!")
             self.connection.commit()
-
 
     def dropper_capec(self) -> None:
         """DROP TABLE `CAPEC`;
@@ -194,7 +193,6 @@ class CapecCweCve:
 
             self.connection.commit()
             print(f"Таблица `CWE` заполнена\n - Использовалось: {data}")
-
 
 
 
@@ -279,6 +277,9 @@ def main():
 # create table `CWE` IF NOT EXISTS
     # db.create_table_cwe()
 
+# create table `CWE_parentof` IF NOT EXISTS
+    db.create_table_cwe_parentof()
+
 # --- --- --- --- --- INSERTER --- --- --- --- --- --- ---
 
 # insert `CAPEC`
@@ -292,6 +293,11 @@ def main():
 # insert `CWE`
     # db.bruter_file(data="SQL QUERY/INSERT_cwe_ENTITY_query.sql")
     # db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_ENTITY_query_fix.sql")
+
+# insert `CWE_parentof`
+    # db.bruter_file(data="SQL QUERY/INSERT_cwe_parentof_query.sql")
+    db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_parentof_query_fix.sql")
+
 # --- --- --- --- --- DROPPER --- --- --- --- --- --- ---
 
 # !!! DROPER `CAPEC`
