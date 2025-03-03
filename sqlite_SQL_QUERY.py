@@ -282,10 +282,10 @@ def main():
 # --- --- --- --- --- SELECT --- --- --- --- --- --- ---
 
 # SELECT INNER JOIN (CAPEC_parentof)
-#     db.select_join_capec_parentof()
+    # db.select_join_capec_parentof()
 
 # SELECT * FROM CWE
-    db.select_all_cwe()
+    # db.select_all_cwe()
 # =======================================================================================================
 
     # CLOSE CONNECTION DB
