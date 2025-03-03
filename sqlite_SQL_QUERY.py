@@ -296,7 +296,7 @@ def main():
     # db.create_table_cwe()
 
 # create table `CWE_parentof` IF NOT EXISTS
-    db.create_table_cwe_parentof()
+#     db.create_table_cwe_parentof()
 
 # --- --- --- --- --- INSERTER --- --- --- --- --- --- ---
 
@@ -314,7 +314,7 @@ def main():
 
 # insert `CWE_parentof`
     # db.bruter_file(data="SQL QUERY/INSERT_cwe_parentof_query.sql")
-    db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_parentof_query_fix.sql")
+    # db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_parentof_query_fix.sql")
 
 # --- --- --- --- --- DROPPER --- --- --- --- --- --- ---
 
@@ -329,6 +329,9 @@ def main():
 
 # SELECT * FROM CWE
     # db.select_all_cwe()
+
+# SELECT INNER JOIN (CWE_parentof)
+    # db.select_join_cwe_parentof()
 # =======================================================================================================
 
     # CLOSE CONNECTION DB
