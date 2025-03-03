@@ -195,6 +195,9 @@ class CapecCweCve:
             self.connection.commit()
             print(f"Таблица `CWE` заполнена\n - Использовалось: {data}")
 
+
+
+
     def select_join_capec_parentof(self) -> None:
 
         # id, caped_parent_id, caped_child_id
