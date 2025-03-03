@@ -244,7 +244,7 @@ def main():
 # --- --- --- --- --- SELECT --- --- --- --- --- --- ---
 
 # SELECT INNER JOIN (CAPEC_parentof)
-    db.select_join_capec_parentof()
+#     db.select_join_capec_parentof()
 
 # =======================================================================================================
 
