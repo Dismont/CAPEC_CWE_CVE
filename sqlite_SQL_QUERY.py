@@ -157,6 +157,18 @@ class CapecCweCve:
             self.connection.commit()
             print(f"Таблица `CAPEC` заполнена\n - Использовалось: {data}")
 
+    def insert_into_cwe(self,*, data:str) -> None:
+
+        i = 0
+        try:
+            text = ""
+            with open(data, "r") as file:
+                lines = file.readlines()
+                file.close()
+
+
+            for i in range(1,len(lines)):
+                self.cursor.execute(f"{lines[0]} {lines[i].replace("),", ");")}")
 
 
     def select_join_capec_parentof(self):
