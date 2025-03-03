@@ -139,7 +139,7 @@ class CapecCweCve:
                               create table IF NOT EXISTS `CWE_to_CVE`(
                               id INTEGER PRIMARY KEY AUTOINCREMENT,
                               cwe_id INTEGER NOT NULL,
-                              cve_id INTEGER NOT NULL
+                              cve_id VARCHAR(50) NOT NULL
                               ); """)
         except Exception as e:
             print(f"Error: {e}")
@@ -165,7 +165,14 @@ class CapecCweCve:
             print("Таблица `CAPEC` УДАЛЕНА !")
             self.connection.commit()
 
-
+    def dropper_cwe_to_cve(self) -> None:
+        try:
+            self.cursor.execute(""" drop table `CWE_to_CVE`;""")
+        except Exception as e:
+            print(f"Error: {e}")
+        else:
+            print("Таблица `CWE_to_CVE` УДАЛЕННА!")
+            self.connection.commit()
 
     def insert_into_capec(self,*, data:str) -> None:
 
@@ -336,13 +343,17 @@ def main():
     # db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_parentof_query_fix.sql")
 
 # insert `CWE_to_CVE`
-    db.bruter_file(data="SQL QUERY/INSERT_cwe_to_cve_query.sql")
+    # db.bruter_file(data="SQL QUERY/INSERT_cwe_to_cve_query.sql")
     db.insert_into_cwe(data="SQL QUERY/INSERT_cwe_to_cve_query_fix.sql")
+
+
 # --- --- --- --- --- DROPPER --- --- --- --- --- --- ---
 
 # !!! DROPER `CAPEC`
     # dropper_capec(connect=connection,cursor=cursor)
 
+# !!! DROPPER `CWE_to_CVE`
+    # db.dropper_cwe_to_cve()
 
 # --- --- --- --- --- SELECT --- --- --- --- --- --- ---
 
