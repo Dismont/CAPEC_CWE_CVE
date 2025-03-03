@@ -232,6 +232,24 @@ INNER JOIN
         for row in rows:
             print(row)
 
+    def select_join_cwe_parentof(self) -> None:
+        self.cursor.execute("""
+        select 
+            parent.cwe_name as `Parent ID`,
+            child.cwe_name as `Child ID` 
+        FROM CWE_parentof
+            inner join CWE as parent on
+                parent.cwe_id = CWE_parentof.cwe_parent
+            inner join CWE as child on 
+                child.cwe_id = CWE_parentof.cwe_child;  
+                """)
+
+        # Получаем все строки результатов
+        rows = self.cursor.fetchall()
+
+        # Выводим данные
+        for row in rows:
+            print(row)
 
 
 
