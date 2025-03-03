@@ -88,6 +88,34 @@ class CapecCweCve:
                 self.connection.commit()
 
 
+    def create_table_cwe(self) -> None:
+        """create table `CWE`
+
+            (
+                - id INT AUTOINCREMENT UNIQUE NOT NULL,
+                - cwe_id INT UNIQUE NOT NULL,
+                - cwe_name VARCHAR(100) NOT NULL,
+                - cwe_description TEXT NOT NULL,
+                - cwe_type VARCHAR(40) NOT NULL
+            );
+        :param self:
+        :return:        None
+        """
+        try:
+            self.cursor.execute("""
+                       create table IF NOT EXISTS `CWE`(
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       cwe_id INTEGER NOT NULL UNIQUE,
+                       cwe_name VARCHAR(150) NOT NULL UNIQUE,
+                       cwe_description TEXT NOT NULL,
+                       cwe_link VARCHAR(55) NOT NULL UNIQUE,
+                       cwe_type VARCHAR(50) NOT NULL
+                       ); """)
+        except Exception as e:
+            print(f"Error: {e}")
+        else:
+            print("Таблица `CWE` создана!")
+            self.connection.commit()
 
     def dropper_capec(self) -> None:
             """DROP TABLE `CAPEC`;
