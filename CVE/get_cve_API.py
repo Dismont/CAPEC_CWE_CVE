@@ -47,17 +47,20 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
         # print(f"Data: {dump["Data"]}")
 
         # VALUEs
+        cve_id = ""
         cve_name = ""
         cve_description = ""
 
-        cve_cvss_v2_vector = ""
-        cve_cvss_v2_basescore = ""
+        cve_cvss_v2_vector = "N/A"
+        cve_cvss_v2_basescore = "0"
 
-        cve_cvss_v3_vector = ""
-        cve_cvss_v3_basescore = ""
+        cve_cvss_v3_vector = "N/A"
+        cve_cvss_v3_basescore = "0"
 
         try:
             # CVE Name
+            cve_id = dump["Data"]["vulnerabilities"][0]["cve"]["id"].replace("CVE", "").replace("-", "")
+            print(f"ID:                     {cve_id}")
             cve_name = dump["Data"]["vulnerabilities"][0]["cve"]["id"]
             print(f"Name:               {cve_name}")
             # CVE Description
@@ -80,27 +83,41 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
             print(f"Error (parsing_json) CVE NO KEY! -> {key_error}")
 
         finally:
-            return {"cve_name": cve_name,
-                "cve_description": cve_description,
-                "cve_cvss_v2_vector": cve_cvss_v2_vector,
-                "cve_cvss_v2_basescore": cve_cvss_v2_basescore,
-                "cve_cvss_v3_vector": cve_cvss_v3_vector,
-                "cve_cvss_v3_basescore": cve_cvss_v3_basescore}
+            return {
+                "cve_id"                : cve_id,
+                "cve_name"              : cve_name,
+                "cve_description"       : cve_description,
+                "cve_cvss_v2_vector"    : cve_cvss_v2_vector,
+                "cve_cvss_v2_basescore" : cve_cvss_v2_basescore,
+                "cve_cvss_v3_vector"    : cve_cvss_v3_vector,
+                "cve_cvss_v3_basescore" : cve_cvss_v3_basescore
+            }
 
     if dump["isCve"] == False and dump["Data"] != "":
         print(" --- ---  --- CPE --- --- --- ")
-        print(f"Data: {dump["Data"]}")
+        # print(f"Data: {dump["Data"]}")
 
         # VALUEs
-        cve_name = ""
-        cpes_strings = []
-        cpes_status = []
-        cpes_id = []
+        cve_id = ""
+        cpes_id =       []
+        cpes_strings =  []
+        cpes_status =   []
+        cpes_part =     []
+        cpes_vendor =   []
+        cpes_product =  []
+        cpes_version =  []
+        cpes_update =   []
+        cpes_edition =  []
+        cpes_language = []
+        cpes_edition_sw = []
+        cpes_target_sw = []
+        cpes_target_hw = []
+        cpes_other =    []
 
         try:
             # CPE cve_name
-            cve_name = dump["Link"].replace("https://services.nvd.nist.gov/rest/json/cpematch/2.0?cveId=","").replace(".json","")
-            # print(f"CVE Name:               {cve_name}")
+            cve_id = dump["Link"].replace("https://services.nvd.nist.gov/rest/json/cpematch/2.0?cveId=","").replace(".json","").replace("CVE","").replace("-","")
+            print(f"CVE Id:               {cve_id}")
             matchStrings = dump["Data"]["matchStrings"]
             for matchString in matchStrings:
                 cpes_id.append(matchString["matchString"]["matchCriteriaId"])
@@ -112,6 +129,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                 print(f"CPE String:             {cpes_strings[i]}")
                 print(f"CPE Status:             {cpes_status[i]}")
                 cpe_slices = cpes_strings[i].split(":")
+                cpes_part.append(cpe_slices[2])
                 match cpe_slices[2]:
                     case "a":
                         print("CPE part:               Application")
@@ -121,8 +139,11 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                         print("CPE part:               Hardware")
 
                 print(f"CPE vendor:             {cpe_slices[3]}")
+                cpes_vendor.append(cpe_slices[3])
                 print(f"CPE product:            {cpe_slices[4]}")
+                cpes_product.append(cpe_slices[4])
                 # print(f"CPE version:            {cpe_slices[5]}")
+                cpes_version.append(cpe_slices[5])
                 match cpe_slices[5]:
                     case "*":
                         print(f"CPE version:            Any")
@@ -131,6 +152,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                     case _:
                         print(f"CPE version:            {cpe_slices[5]}")
                 # print(f"CPE update:             {cpe_slices[6]}")
+                cpes_update.append(cpe_slices[6])
                 match cpe_slices[6]:
                     case "*":
                         print(f"CPE update:             Any")
@@ -139,6 +161,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                     case _:
                         print(f"CPE update:             {cpe_slices[6]}")
                 # print(f"CPE edition:            {cpe_slices[7]}")
+                cpes_edition.append(cpe_slices[7])
                 match cpe_slices[7]:
                     case "*":
                         print(f"CPE edition:            Any")
@@ -147,6 +170,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                     case _:
                         print(f"CPE edition:            {cpe_slices[7]}")
                 # print(f"CPE language:           {cpe_slices[8]}")
+                cpes_language.append(cpe_slices[8])
                 match cpe_slices[8]:
                     case "*":
                         print(f"CPE language:           Any")
@@ -155,6 +179,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                     case _:
                         print(f"CPE language:           {cpe_slices[8]}")
                 # print(f"CPE edition_sw:         {cpe_slices[9]}")
+                cpes_edition_sw.append(cpe_slices[9])
                 match cpe_slices[9]:
                     case "*":
                         print(f"CPE edition_sw:         Any")
@@ -163,6 +188,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                     case _:
                         print(f"CPE edition_sw:         {cpe_slices[9]}")
                 # print(f"CPE target_sw:          {cpe_slices[10]}")
+                cpes_target_sw.append(cpe_slices[10])
                 match cpe_slices[10]:
                     case "*":
                         print(f"CPE target_sw:          Any")
@@ -171,6 +197,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                     case _:
                         print(f"CPE target_sw:          {cpe_slices[10]}")
                 # print(f"CPE target_hw:          {cpe_slices[11]}")
+                cpes_target_hw.append(cpe_slices[11])
                 match cpe_slices[11]:
                     case "*":
                         print(f"CPE target_hw:          Any")
@@ -179,6 +206,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                     case _:
                         print(f"CPE target_hw:          {cpe_slices[11]}")
                 # print(f"Other:                  {cpe_slices[12]}")
+                cpes_other.append(cpe_slices[12])
                 match cpe_slices[12]:
                     case "*":
                         print(f"Other:                  Any")
@@ -188,11 +216,26 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
                         print(f"Other:                  {cpe_slices[12]}")
 
 
-
-
-
         except KeyError as key_error:
             print(f"Error (parsing_json) CPE NO KEY! -> {key_error}")
+
+        finally:
+            return {
+                    "cve_id" : cve_id ,
+                    "cpes_strings" : cpes_strings,
+                    "cpes_status" : cpes_status,
+                    "cpes_part":cpes_part,
+                    "cpes_vendor":cpes_vendor,
+                    "cpes_product":cpes_product,
+                    "cpes_version":cpes_version,
+                    "cpes_update":cpes_update,
+                    "cpes_edition":cpes_edition,
+                    "cpes_language":cpes_language,
+                    "cpes_edition_sw":cpes_edition_sw,
+                    "cpes_target_sw":cpes_target_sw,
+                    "cpes_target_hw":cpes_target_hw,
+                    "cpes_other":cpes_other
+            }
 
 
 
