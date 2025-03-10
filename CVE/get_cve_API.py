@@ -84,6 +84,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
 
         finally:
             return {
+                "isCve"                 : dump["isCve"],
                 "cve_id"                : cve_id,
                 "cve_name"              : cve_name,
                 "cve_description"       : cve_description,
@@ -221,6 +222,7 @@ async def parsing_json(*, dump:dict[str]) -> dict[str,str] | None:
 
         finally:
             return {
+                    "isCve"  : dump["isCve"],
                     "cve_id" : cve_id ,
                     "cpes_strings" : cpes_strings,
                     "cpes_status" : cpes_status,
@@ -269,12 +271,8 @@ async def fetch_API(*,session:aiohttp.ClientSession, link:str, isCve:bool) : #->
 async def main():
     data_txt = await get_data_txt(path="cves_list.txt")
     full_dump = []
-    # for item in data_txt:
-        # data_json_dump = await parsing_json(dump=item)
-        # full_dump.append(data_json_dump)
-    # print(*full_dump, sep=" ")
 
-        # print("Данные API не были получены!")
+    
 
 
 if __name__ == "__main__":
