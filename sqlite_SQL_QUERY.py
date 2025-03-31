@@ -8,7 +8,6 @@ class CapecCweCve:
         self.connection = sqlite3.connect(file)
         self.cursor = self.connection.cursor()
 
-
     def create_table_capec(self) -> None:
         """ create table `CAPEC`
 
@@ -173,7 +172,7 @@ class CapecCweCve:
         else:
             print("Таблица `CWE_to_CVE` УДАЛЕННА!")
             self.connection.commit()
-            
+
 
     def insert_into_capec(self,*, data:str) -> None:
 
