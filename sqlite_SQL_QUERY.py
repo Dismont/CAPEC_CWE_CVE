@@ -364,7 +364,7 @@ def main():
 
 # insert `CAPEC_to_CWE`
     # db.bruter_file(data="SQL QUERY/INSERT_capec_to_cwe_query.sql")
-    db.insert_into_capec_to_cwe(data="SQL QUERY/INSERT_capec_to_cwe_query_fix.sql")
+    # db.insert_into_capec_to_cwe(data="SQL QUERY/INSERT_capec_to_cwe_query_fix.sql")
 
 # insert `CWE_to_CVE`
     # db.bruter_file(data="SQL QUERY/INSERT_cwe_to_cve_query.sql")
