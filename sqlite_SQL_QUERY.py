@@ -173,6 +173,7 @@ class CapecCweCve:
         else:
             print("Таблица `CWE_to_CVE` УДАЛЕННА!")
             self.connection.commit()
+            
 
     def insert_into_capec(self,*, data:str) -> None:
 
