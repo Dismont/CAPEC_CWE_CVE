@@ -1,4 +1,4 @@
-insert into capec_to_cwe (id, capec_id, cwe_id) values 
+insert into CAPEC_to_CWE (id, capec_id, cwe_id) values
 ( 148, 345 ),
 ( 145, 354 ),
 ( 218, 345 ),
