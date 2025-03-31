@@ -218,6 +218,25 @@ class CapecCweCve:
             self.connection.commit()
             print(f"Таблица `CWE` заполнена\n - Использовалось: {data}")
 
+    def insert_into_capec_to_cwe(self,*, data:str) -> None:
+        i = 0
+
+        text = ""
+        with open(data, "r") as file:
+            lines = file.readlines()
+            file.close()
+
+            for i in range(1, len(lines)):
+                try:
+                    self.cursor.execute(f"{lines[0]} {lines[i].replace("),", ");")}")
+                except Exception as e:
+                    print(f"Строка: {i}")
+                    print(f"Error : {e}")
+                    continue
+
+            self.connection.commit()
+            print(f"Таблица `CAPEC_to_CWE` заполнена\n - Использовалось: {data}")
+
 
 
     def select_join_capec_parentof(self) -> None:
