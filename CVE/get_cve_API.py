@@ -1,7 +1,6 @@
 import aiohttp, aiofiles, asyncio, json
 from typing import Any
 
-from selenium.webdriver.common.devtools.v85.fetch import continue_request
 
 
 async def get_data_txt(*, path:str) -> list[dict[str, bool | Any]] | None:
