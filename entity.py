@@ -60,3 +60,26 @@ class PersonalComputer:
         User Layer          : {self.user_layer}
         """)
 
+class Switch:
+
+    def __init__(self):
+        self.configuration = {
+            "Hostname": ""
+        }
+
+        self.network_layer = {
+            "Type": "Switch",
+            "" : ""
+        }
+        self.hardware_layer = {
+            "MotherBoard": "",
+            "CPU": "",
+            "RAM": "",
+            "Storage": "",
+            "Power unit": ""
+        }
+        self.system_layer = {
+            "OS": "",
+            "OS version": ""
+        }
+
