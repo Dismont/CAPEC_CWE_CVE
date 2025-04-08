@@ -3,6 +3,10 @@ class PersonalComputer:
 
     def __init__(self):
 
+        self.configuration = {
+            "Hostname" : ""
+        }
+
         self.network_layer = {
                 "Type" : "PC"
         }
