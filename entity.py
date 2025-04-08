@@ -53,6 +53,7 @@ class PersonalComputer:
 
     def print_all_data(self):
         print(f"""
+        Configuration       : {self.configuration},
         Network Layer       : {self.network_layer},
         Hardware Layer      : {self.hardware_layer},
         System Layer        : {self.system_layer},
