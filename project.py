@@ -20,7 +20,7 @@ def main():
 
 
 def recursion_node_walker():
-    for
+    pass
 
 
 
