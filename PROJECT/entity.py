@@ -135,3 +135,50 @@ class Switch:
             else: query.append(value)
 
         return  query
+
+class Router:
+    def __init__(self, hostname=""):
+        self.configuration = {
+            "Hostname": hostname,
+            "Type": "Switch"
+        }
+
+        self.network_layer = {
+            "Ethernet 1": "",
+            "Ethernet 2": "",
+            "Ethernet 3": "",
+            "Ethernet 4": "",
+
+        }
+        self.hardware_layer = {
+            "MotherBoard": "",
+            "CPU": "",
+            "RAM": "",
+            "Storage": "",
+            "Power unit": ""
+        }
+        self.system_layer = {
+            "OS": "",
+            "OS version": ""
+        }
+
+    def print_all_data(self):
+        print("Configuration\n\t\t\t\t", end=""), print(*self.configuration.items(), sep="\n\t\t\t\t")
+        print("Network Layer\n\t\t\t\t", end=""), print(*self.network_layer.items(), sep="\n\t\t\t\t")
+        print("Hardware Layer\n\t\t\t\t", end=""), print(*self.hardware_layer.items(), sep="\n\t\t\t\t")
+        print("System Layer\n\t\t\t\t", end=""), print(*self.system_layer.items(), sep="\n\t\t\t\t")
+
+    @property
+    def hostname(self):
+        return self.configuration["Hostname"]
+
+    @property
+    def next_nodes(self):
+
+        query = []
+
+        for key,value in self.network_layer.items():
+            if value == "": continue
+            else: query.append(value)
+
+        return  query
