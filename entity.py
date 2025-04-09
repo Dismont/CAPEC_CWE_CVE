@@ -53,14 +53,13 @@ class PersonalComputer:
         pass
 
     def print_all_data(self):
-        print(f"""
-        Configuration       : {self.configuration},
-        Network Layer       : {self.network_layer},
-        Hardware Layer      : {self.hardware_layer},
-        System Layer        : {self.system_layer},
-        Application Layer   : {self.application_layer},
-        User Layer          : {self.user_layer}
-        """)
+        print("Configuration\n\t\t\t\t",end=""), print(*self.configuration.items(),sep="\n\t\t\t\t")
+        print("Network Layer\n\t\t\t\t",end=""), print(*self.network_layer.items(),sep="\n\t\t\t\t")
+        print("Hardware Layer\n\t\t\t\t",end=""), print(*self.hardware_layer.items(),sep="\n\t\t\t\t")
+        print("System Layer\n\t\t\t\t",end=""), print(*self.system_layer.items(),sep="\n\t\t\t\t")
+        print("Application Layer\n\t\t\t\t",end=""), print(*self.application_layer.items(),sep="\n\t\t\t\t")
+        print("User Layer\n\t\t\t\t",end=""), print(*self.user_layer.items(),sep="\n\t\t\t\t")
+
 
     def get_next_node(self):
         return  list(self.network_layer.values())
@@ -114,13 +113,11 @@ class Switch:
         }
 
     def print_all_data(self):
-        print(f"""
-        Configuration       : {self.configuration},
-        Network Layer       : {self.network_layer},
-        Hardware Layer      : {self.hardware_layer},
-        System Layer        : {self.system_layer},
+        print("Configuration\n\t\t\t\t", end=""), print(*self.configuration.items(), sep="\n\t\t\t\t")
+        print("Network Layer\n\t\t\t\t", end=""), print(*self.network_layer.items(), sep="\n\t\t\t\t")
+        print("Hardware Layer\n\t\t\t\t", end=""), print(*self.hardware_layer.items(), sep="\n\t\t\t\t")
+        print("System Layer\n\t\t\t\t", end=""), print(*self.system_layer.items(), sep="\n\t\t\t\t")
 
-        """)
 
     def get_next_node(self):
         return  list(self.network_layer.values())
