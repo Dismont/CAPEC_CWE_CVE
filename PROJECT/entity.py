@@ -36,6 +36,9 @@ class PersonalComputer:
         }
 
 
+    @property
+    def hostname(self):
+        return self.configuration["Hostname"]
 
     def get_network_cve(self):
         pass
@@ -60,8 +63,8 @@ class PersonalComputer:
         print("Application Layer\n\t\t\t\t",end=""), print(*self.application_layer.items(),sep="\n\t\t\t\t")
         print("User Layer\n\t\t\t\t",end=""), print(*self.user_layer.items(),sep="\n\t\t\t\t")
 
-
-    def get_next_node(self):
+    @property
+    def next_nodes(self):
         return  list(self.network_layer.values())
 
 
@@ -118,6 +121,17 @@ class Switch:
         print("Hardware Layer\n\t\t\t\t", end=""), print(*self.hardware_layer.items(), sep="\n\t\t\t\t")
         print("System Layer\n\t\t\t\t", end=""), print(*self.system_layer.items(), sep="\n\t\t\t\t")
 
+    @property
+    def hostname(self):
+        return self.configuration["Hostname"]
 
-    def get_next_node(self):
-        return  list(self.network_layer.values())
+    @property
+    def next_nodes(self):
+
+        query = []
+
+        for key,value in self.network_layer.items():
+            if value == "": continue
+            else: query.append(value)
+
+        return  query
