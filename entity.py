@@ -1,14 +1,15 @@
-import json
+
 class PersonalComputer:
 
-    def __init__(self):
+    def __init__(self,hostname=""):
 
         self.configuration = {
-            "Hostname" : ""
+            "Hostname" : hostname,
+            "Type"     : "PC"
         }
 
         self.network_layer = {
-                "Type" : "PC"
+            "RJ-45":""
         }
         self.hardware_layer = {
             "MotherBoard" : "",
@@ -61,16 +62,44 @@ class PersonalComputer:
         User Layer          : {self.user_layer}
         """)
 
+    def get_next_node(self):
+        return  list(self.network_layer.values())
+
+
+
 class Switch:
 
-    def __init__(self):
+    def __init__(self,hostname=""):
         self.configuration = {
-            "Hostname": ""
+            "Hostname": hostname,
+            "Type": "Switch"
         }
 
         self.network_layer = {
-            "Type": "Switch",
-            "" : ""
+            "Ethernet 1" : "",
+            "Ethernet 2": "",
+            "Ethernet 3": "",
+            "Ethernet 4": "",
+            "Ethernet 5": "",
+            "Ethernet 6": "",
+            "Ethernet 7": "",
+            "Ethernet 8": "",
+            "Ethernet 9": "",
+            "Ethernet 10": "",
+            "Ethernet 11": "",
+            "Ethernet 12": "",
+            "Ethernet 13": "",
+            "Ethernet 14": "",
+            "Ethernet 15": "",
+            "Ethernet 16": "",
+            "Ethernet 17": "",
+            "Ethernet 18": "",
+            "Ethernet 19": "",
+            "Ethernet 20": "",
+            "Ethernet 21": "",
+            "Ethernet 22": "",
+            "Ethernet 23": "",
+            "Ethernet 24": "",
         }
         self.hardware_layer = {
             "MotherBoard": "",
@@ -84,3 +113,14 @@ class Switch:
             "OS version": ""
         }
 
+    def print_all_data(self):
+        print(f"""
+        Configuration       : {self.configuration},
+        Network Layer       : {self.network_layer},
+        Hardware Layer      : {self.hardware_layer},
+        System Layer        : {self.system_layer},
+
+        """)
+
+    def get_next_node(self):
+        return  list(self.network_layer.values())
