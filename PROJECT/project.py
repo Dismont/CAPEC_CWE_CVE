@@ -1,69 +1,65 @@
-from PROJECT import entity
-
-from PROJECT.entity import PersonalComputer, Switch
-
+from entity import PersonalComputer, Switch, Router
 
 def main():
-    network_elements = []
-    network_elements.append(entity.PersonalComputer("PC1"))
-    network_elements.append(entity.PersonalComputer("PC2"))
-    network_elements.append(entity.Switch("SW1"))
-    network_elements.append(entity.Switch("SW2"))
 
+    network_elements = [
+        PersonalComputer("PC1"),  # 0
+        PersonalComputer("PC2"),  # 1
+        Switch("SW1"),  # 2
+        Switch("SW2"),  # 3
+        Router("RT1"),  # 4
+        Router("RT2"),  # 5
+        Switch("SW3"),  # 6
+    ]
+
+    # PC1 <--> SW1 (0-2 2-0)
     network_elements[0].network_layer.update({"RJ-45": network_elements[2]})
-    network_elements[1].network_layer.update({"RJ-45": network_elements[2]})
-
     network_elements[2].network_layer.update({"Ethernet 1": network_elements[0]})
-    network_elements[2].network_layer.update({"Ethernet 2": network_elements[1]})
-    network_elements[2].network_layer.update({"Ethernet 3": network_elements[3]})
-    network_elements[3].network_layer.update({"Ethernet 1": network_elements[2]})
+    # SW1 <--> RT1 (2-4 4-2)
+    network_elements[2].network_layer.update({"Ethernet 2": network_elements[4]})
+    network_elements[4].network_layer.update({"Ethernet 1": network_elements[2]})
+    # RT1 <--> RT2 (4-5 5-4)
+    network_elements[4].network_layer.update({"Ethernet 2": network_elements[5]})
+    network_elements[5].network_layer.update({"Ethernet 1": network_elements[4]})
+    # RT2 <--> SW2 (5-3 3-5)
+    network_elements[5].network_layer.update({"Ethernet 2": network_elements[3]})
+    network_elements[3].network_layer.update({"Ethernet 1": network_elements[5]})
+    # SW2 <--> PC2 (3-1 1-3)
+    network_elements[3].network_layer.update({"Ethernet 2": network_elements[1]})
+    network_elements[1].network_layer.update({"RJ-45": network_elements[3]})
+    # SW3 <--> RT2 (6-5 5-6)
+    network_elements[6].network_layer.update({"Ethernet 1": network_elements[5]})
+    network_elements[5].network_layer.update({"Ethernet 2": network_elements[6]})
+    # SW3 <--> SW2 (6-3 3-6)
+    network_elements[6].network_layer.update({"Ethernet 2": network_elements[3]})
+    network_elements[3].network_layer.update({"Ethernet 3": network_elements[6]})
 
 
-    for i in range(len(network_elements)):
-        print(f" --- --- {i+1} --- ---")
-        print(network_elements[i].print_all_data())
-        print(f"List of next nodes: {network_elements[i].get_next_node}")
-        print("-"*100)
-
-    for element in network_elements:
-        print(recursion_node_walker(checklist=[f"{element.configuration["Hostname"]},"],root_node=element))
-
-
-def recursion_node_walker(checklist:list[str],root_node:PersonalComputer | Switch) -> list[str]:
-
-    next_nodes = root_node.get_next_node
-
-    if len(next_nodes) == 1:
-        for i in range(len(checklist)):
-            checklist[i] += f"{next_nodes[0].get_hostname},"
-            print(*checklist, sep=" ")
-        return recursion_node_walker(checklist=checklist, root_node=next_nodes[0])
-
-    else:
-        for node in next_nodes:
-
-            if not node:
-                continue
-
-            else:
-                new_checklist = []
-                for i in range(len(checklist)):
-                    review = checklist[i].split(",")
-                    if node.get_hostname not in review:
-                        new_line = f"{checklist[i] + node.get_hostname},"
-                        new_checklist.append(new_line)
-                checklist = new_checklist
-                print(*checklist, sep=" ")
-                return recursion_node_walker(checklist=checklist, root_node=node)
-
-
-    return checklist
+    paths = recursion_find_path(start_node=network_elements[0], end_node=network_elements[1])
+    print(tuple(path.hostname for path in paths))
 
 
 
+def recursion_find_path(start_node:PersonalComputer | Switch | Router, end_node: PersonalComputer | Switch | Router, path:list[str]=None):
 
+    if not hasattr(start_node, "next_nodes") or not start_node.next_nodes:
+        return []
 
+    if start_node == end_node:
+        return path
 
+    if path is None:
+        path = []
+
+    path = path + [start_node]
+
+    paths = []
+    for node in start_node.next_nodes:
+        if node not in path:
+            new_paths = recursion_find_path(node, end_node, path)
+            for new_path in new_paths:
+                paths.append(new_path)
+    return paths
 
 
 
