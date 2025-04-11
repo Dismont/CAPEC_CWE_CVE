@@ -1,27 +1,25 @@
-
 class PersonalComputer:
 
-    def __init__(self,hostname=""):
-
+    def __init__(self, hostname=""):
         self.configuration = {
-            "Hostname" : hostname,
-            "Type"     : "PC"
+            "Hostname": hostname,
+            "Type": "PC"
         }
 
         self.network_layer = {
-            "RJ-45":""
+            "RJ-45": ""
         }
         self.hardware_layer = {
-            "MotherBoard" : "",
-            "CPU" : "",
-            "RAM" : "",
-            "GPU" : "",
-            "Storage" : "",
-            "Power unit" : ""
+            "MotherBoard": "",
+            "CPU": "",
+            "RAM": "",
+            "GPU": "",
+            "Storage": "",
+            "Power unit": ""
         }
         self.system_layer = {
-            "OS" : "",
-            "OS version" : ""
+            "OS": "",
+            "OS version": ""
         }
 
         self.application_layer = {
@@ -30,11 +28,10 @@ class PersonalComputer:
         }
 
         self.user_layer = {
-            "Mouse" : "",
-            "Keyboard" : "",
-            "Display" : ""
+            "Mouse": "",
+            "Keyboard": "",
+            "Display": ""
         }
-
 
     @property
     def hostname(self):
@@ -56,29 +53,28 @@ class PersonalComputer:
         pass
 
     def print_all_data(self):
-        print("Configuration\n\t\t\t\t",end=""), print(*self.configuration.items(),sep="\n\t\t\t\t")
-        print("Network Layer\n\t\t\t\t",end=""), print(*self.network_layer.items(),sep="\n\t\t\t\t")
-        print("Hardware Layer\n\t\t\t\t",end=""), print(*self.hardware_layer.items(),sep="\n\t\t\t\t")
-        print("System Layer\n\t\t\t\t",end=""), print(*self.system_layer.items(),sep="\n\t\t\t\t")
-        print("Application Layer\n\t\t\t\t",end=""), print(*self.application_layer.items(),sep="\n\t\t\t\t")
-        print("User Layer\n\t\t\t\t",end=""), print(*self.user_layer.items(),sep="\n\t\t\t\t")
+        print("Configuration\n\t\t\t\t", end=""), print(*self.configuration.items(), sep="\n\t\t\t\t")
+        print("Network Layer\n\t\t\t\t", end=""), print(*self.network_layer.items(), sep="\n\t\t\t\t")
+        print("Hardware Layer\n\t\t\t\t", end=""), print(*self.hardware_layer.items(), sep="\n\t\t\t\t")
+        print("System Layer\n\t\t\t\t", end=""), print(*self.system_layer.items(), sep="\n\t\t\t\t")
+        print("Application Layer\n\t\t\t\t", end=""), print(*self.application_layer.items(), sep="\n\t\t\t\t")
+        print("User Layer\n\t\t\t\t", end=""), print(*self.user_layer.items(), sep="\n\t\t\t\t")
 
     @property
     def next_nodes(self):
-        return  list(self.network_layer.values())
-
+        return list(self.network_layer.values())
 
 
 class Switch:
 
-    def __init__(self,hostname=""):
+    def __init__(self, hostname=""):
         self.configuration = {
             "Hostname": hostname,
             "Type": "Switch"
         }
 
         self.network_layer = {
-            "Ethernet 1" : "",
+            "Ethernet 1": "",
             "Ethernet 2": "",
             "Ethernet 3": "",
             "Ethernet 4": "",
@@ -130,11 +126,14 @@ class Switch:
 
         query = []
 
-        for key,value in self.network_layer.items():
-            if value == "": continue
-            else: query.append(value)
+        for key, value in self.network_layer.items():
+            if value == "":
+                continue
+            else:
+                query.append(value)
 
-        return  query
+        return query
+
 
 class Router:
     def __init__(self, hostname=""):
@@ -177,9 +176,11 @@ class Router:
 
         query = []
 
-        for key,value in self.network_layer.items():
-            if value == "": continue
-            else: query.append(value)
+        for key, value in self.network_layer.items():
+            if value == "":
+                continue
+            else:
+                query.append(value)
 
         return query
 

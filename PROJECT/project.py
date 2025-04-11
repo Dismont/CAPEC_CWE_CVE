@@ -1,7 +1,7 @@
 from entity import PersonalComputer, Switch, Router
 
-def main():
 
+def main():
     network_elements = [
         PersonalComputer("PC1"),  # 0
         PersonalComputer("PC2"),  # 1
@@ -34,14 +34,12 @@ def main():
     network_elements[6].network_layer.update({"Ethernet 2": network_elements[3]})
     network_elements[3].network_layer.update({"Ethernet 3": network_elements[6]})
 
-
     paths = recursion_find_path(start_node=network_elements[0], end_node=network_elements[1])
     print(tuple(path.hostname for path in paths))
 
 
-
-def recursion_find_path(start_node:PersonalComputer | Switch | Router, end_node: PersonalComputer | Switch | Router, path:list[str]=None):
-
+def recursion_find_path(start_node: PersonalComputer | Switch | Router, end_node: PersonalComputer | Switch | Router,
+                        path: list[str] = None):
     if not hasattr(start_node, "next_nodes") or not start_node.next_nodes:
         return []
 
@@ -60,10 +58,6 @@ def recursion_find_path(start_node:PersonalComputer | Switch | Router, end_node:
             for new_path in new_paths:
                 paths.append(new_path)
     return paths
-
-
-
-
 
 
 if __name__ == "__main__":
