@@ -60,7 +60,6 @@ def recursion_dfs(
                     path[j] += [node]
                     paths.append(path[i])
                 path = paths
-                print(paths1111111111111111111111111
                 return recursion_dfs(node, end_node, path)
 
 
