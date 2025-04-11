@@ -35,7 +35,6 @@ def main():
     network_elements[3].network_layer.update({"Ethernet 3": network_elements[6]})
 
     paths = recursion_dfs(start_node=network_elements[0], end_node=network_elements[1], path=[[network_elements[0]]])
-    print(type(paths))
     for i, path in enumerate(paths, 1):
         print(f"{i} {" -> ".join([item.hostname for item in path])}")
 
@@ -51,14 +50,16 @@ def recursion_dfs(
     not_in_path = True
     for i in range(len(path)):
         for node in new_nodes:
+
             if node in path[i]:
                 not_in_path = False
                 continue
+
             elif node not in path[i]:
                 for j in range(len(path)):
-                    # print(f"For J -> {path[j]}")
                     path[j] += [node]
                     paths.append(path[i])
+
                 path = paths
                 return recursion_dfs(node, end_node, path)
 
