@@ -1,4 +1,4 @@
-from PROJECT.entity import PersonalComputer, Switch, Router
+from entity import PersonalComputer, Switch, Router
 
 
 def main():
@@ -34,40 +34,34 @@ def main():
     network_elements[6].network_layer.update({"Ethernet 2": network_elements[3]})
     network_elements[3].network_layer.update({"Ethernet 3": network_elements[6]})
 
-    dfs = DFS(network_elements[0])
+    paths = recursion_dfs(start_node=network_elements[0], end_node=network_elements[1], path=[[network_elements[0]]])
+    print(type(paths))
+    for i, path in enumerate(paths, 1):
+        print(f"{i} {" -> ".join([item.hostname for item in path])}")
 
 
-class DFS:
+def recursion_dfs(
+        start_node, end_node, path) -> list[list[PersonalComputer | Switch | Router]] | None:
+    new_nodes = start_node.next_nodes
+    paths = []
 
-    def __init__(self,start_node:PersonalComputer | Switch | Router, end_node:PersonalComputer | Switch | Router):
+    if start_node == end_node:
+        return path
 
-        self.start_node = start_node
-        self.end_node = end_node
-        self.next_node:PersonalComputer | Switch | Router = None
-        self.path = []
-
-        self.main()
-
-    def go_back(self):
-        self.path.pop()
-        return self.path
-
-    @staticmethod
-    def main():
-
-        next_nodes = self.start_node.next_nodes
-
-        if self.start_node == self.end_node:
-            return self.path
-
-        for next_node in next_nodes:
-            roadmap = []
-            return self.main(self.next_node)
-
-
-
-
-
+    not_in_path = True
+    for i in range(len(path)):
+        for node in new_nodes:
+            if node in path[i]:
+                not_in_path = False
+                continue
+            elif node not in path[i]:
+                for j in range(len(path)):
+                    # print(f"For J -> {path[j]}")
+                    path[j] += [node]
+                    paths.append(path[i])
+                path = paths
+                print(paths1111111111111111111111111
+                return recursion_dfs(node, end_node, path)
 
 
 if __name__ == "__main__":
